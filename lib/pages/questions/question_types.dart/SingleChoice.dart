@@ -61,7 +61,7 @@ class _SingleChoiceState extends State<SingleChoice> {
                     ),
                   ),
                   Text(
-                    "1/32",
+                    "1/3 2",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
