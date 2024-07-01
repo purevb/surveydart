@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LogicalChoice extends StatefulWidget {
   const LogicalChoice({super.key});
@@ -7,11 +9,28 @@ class LogicalChoice extends StatefulWidget {
   State<LogicalChoice> createState() => _LogicalChoiceState();
 }
 
+Future<List<Answer>> fetchAnswers() async {
+  final response = await http.get(Uri.parse('http://10.0.2.2:3106/api/answer'));
+
+  if (response.statusCode == 200) {
+    List<dynamic> jsonResponse = json.decode(response.body);
+    return jsonResponse.map((answer) => Answer.fromJson(answer)).toList();
+  } else {
+    throw Exception('Failed to load answers.');
+  }
+}
+
 List<String> options = ['Yes', 'No'];
-//  List<bool> _isChecked = List<bool>.filled(options.length, false);
 
 class _LogicalChoiceState extends State<LogicalChoice> {
+  late Future<List<Answer>> futureAnswer;
   String currentOption = '';
+
+  @override
+  void initState() {
+    super.initState();
+    futureAnswer = fetchAnswers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,40 +100,58 @@ class _LogicalChoiceState extends State<LogicalChoice> {
                     color: Colors.white,
                     fontSize: 18),
               )),
-              ListTile(
-                title: Text(
-                  "Yes",
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Radio(
-                  value: options[0],
-                  groupValue: currentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      currentOption = value.toString();
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "No",
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Radio(
-                  value: options[1],
-                  groupValue: currentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      currentOption = value.toString();
-                    });
-                  },
-                ),
-              ),
+              FutureBuilder<List<Answer>>(
+                  future: futureAnswer,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                snapshot.data![index].answerText,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              leading: Radio(
+                                value: options[index],
+                                groupValue: currentOption,
+                                onChanged: (value) {
+                                  setState(() {
+                                    currentOption = value.toString();
+                                  });
+                                },
+                              ),
+                            );
+                          });
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
+                    return const CircularProgressIndicator();
+                  })
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class Answer {
+  final int answersId;
+  final String questionsId;
+  final String answerText;
+
+  const Answer({
+    required this.answersId,
+    required this.questionsId,
+    required this.answerText,
+  });
+
+  factory Answer.fromJson(Map<String, dynamic> json) {
+    return Answer(
+      answersId: json['answers_id'],
+      questionsId: json['questions_id'],
+      answerText: json['answer_text'],
     );
   }
 }
