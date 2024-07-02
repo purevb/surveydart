@@ -1,7 +1,7 @@
 import 'package:survey/models/answer.dart';
 import 'package:http/http.dart' as http;
 
-class RemoteServive {
+class RemoteService {
   Future<List<Answer>?> getAnswer() async {
     var client = http.Client();
     var uri = Uri.parse('http://10.0.2.2:3106/api/answer');
