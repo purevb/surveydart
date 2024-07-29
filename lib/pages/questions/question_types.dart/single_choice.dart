@@ -1,10 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class TextChoice extends StatelessWidget {
-  const TextChoice({super.key});
+class SingleChoice extends StatefulWidget {
+  const SingleChoice({super.key});
 
+  @override
+  State<SingleChoice> createState() => SingleChoiceState();
+}
+
+List<String> options = ['Options 1 ', 'Options 2', 'Options 3 '];
+
+class SingleChoiceState extends State<SingleChoice> {
+  String currentOption = options[0];
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -12,7 +18,6 @@ class TextChoice extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.black,
@@ -55,7 +60,7 @@ class TextChoice extends StatelessWidget {
                     ),
                   ),
                   const Text(
-                    "1/32",
+                    "1/3 2",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
@@ -66,35 +71,49 @@ class TextChoice extends StatelessWidget {
                 decoration: const BoxDecoration(
                     image: DecorationImage(image: AssetImage('assets/eq.png'))),
               ),
-              const Text(
-                "Tell us how u feel",
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: width * 0.9,
-                child: TextField(
-                  textAlign: TextAlign.start,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    hintText: 'Input your answer here',
-                    hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 50, horizontal: 10),
-                  ),
+              ListTile(
+                title: const Text("options 1",
+                    style: TextStyle(color: Colors.white)),
+                leading: Radio(
+                  value: options[0],
+                  groupValue: currentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      currentOption = value.toString();
+                    });
+                  },
                 ),
               ),
-              SizedBox(
-                height: height * 0.2,
+              ListTile(
+                title: const Text(
+                  "Options 2",
+                  style: TextStyle(color: Colors.white),
+                ),
+                leading: Radio(
+                  value: options[1],
+                  groupValue: currentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      currentOption = value.toString();
+                    });
+                  },
+                ),
               ),
-              SizedBox(
-                width: width,
-                height: height * 0.05,
-                child:
-                    ElevatedButton(onPressed: () {}, child: const Text("Next")),
-              ),
+              ListTile(
+                title: const Text(
+                  "options 3",
+                  style: TextStyle(color: Colors.white),
+                ),
+                leading: Radio(
+                  value: options[2],
+                  groupValue: currentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      currentOption = value.toString();
+                    });
+                  },
+                ),
+              )
             ],
           ),
         ),

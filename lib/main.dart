@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:survey/pages/home.dart';
+import 'package:survey/pages/login_page/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      home: LoginPage(),
     );
   }
 }

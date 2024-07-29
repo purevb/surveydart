@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:survey/models/answer.dart';
-import 'package:survey/models/question.dart';
-import 'package:survey/services/answer_remote_service.dart';
-import 'package:survey/services/question_remote_service.dart';
+import 'package:survey/models/question_type.dart';
+import 'package:survey/services/question_service.dart';
 
 class LogicalChoice extends StatefulWidget {
   const LogicalChoice({super.key});
@@ -12,9 +10,8 @@ class LogicalChoice extends StatefulWidget {
 }
 
 class _LogicalChoiceState extends State<LogicalChoice> {
-  List<Answer>? answers;
-  List<Question>? questions;
-  // String logicalChoiceQuestionTypeID = "665e90954026f697ef6234e9";
+  List<AnswerModel>? answers;
+  List<QuestionModel>? questions;
 
   String currentOption = '';
   var isLoaded = false;
@@ -26,7 +23,6 @@ class _LogicalChoiceState extends State<LogicalChoice> {
   }
 
   getData() async {
-    answers = await RemoteService().getAnswer();
     questions = await QuestionRemoteService().getQuestion();
     print(questions![0].questionsTypeID.toString());
     if (answers != null && questions != null) {
@@ -99,17 +95,18 @@ class _LogicalChoiceState extends State<LogicalChoice> {
                       ),
                     ),
                     if (questions != null && questions!.isNotEmpty)
-                      Container(
-                        child: Text(
-                          questions![1].questionText ?? "No question available",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 18),
-                        ),
+                      Text(
+                        questions![1].questionText ?? "No question available",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 18),
                       ),
                     Visibility(
                       visible: isLoaded,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: answers?.length ?? 0,
@@ -136,9 +133,6 @@ class _LogicalChoiceState extends State<LogicalChoice> {
                             ],
                           );
                         },
-                      ),
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
                       ),
                     ),
                   ],

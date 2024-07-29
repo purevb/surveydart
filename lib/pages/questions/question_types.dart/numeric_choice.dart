@@ -73,14 +73,13 @@ class _NumericChoiceState extends State<NumericChoice> {
                   image: DecorationImage(image: AssetImage('assets/eq.png')),
                 ),
               ),
-              Container(
-                  child: Text(
+              const Text(
                 "Энэ зураг танд таалагдаж байна уу ?",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 18),
-              )),
+              ),
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: songolt.length,
@@ -88,7 +87,7 @@ class _NumericChoiceState extends State<NumericChoice> {
                     return ListTile(
                       title: Text(
                         songolt[index],
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                       leading: Radio(
                         value: songolt[index],

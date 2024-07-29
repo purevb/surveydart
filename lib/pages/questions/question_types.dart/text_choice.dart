@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class SingleChoice extends StatefulWidget {
-  SingleChoice({super.key});
+class TextChoice extends StatelessWidget {
+  const TextChoice({super.key});
 
-  @override
-  State<SingleChoice> createState() => _SingleChoiceState();
-}
-
-List<String> options = ['Options 1 ', 'Options 2', 'Options 3 '];
-
-class _SingleChoiceState extends State<SingleChoice> {
-  String currentOption = options[0];
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -19,18 +10,19 @@ class _SingleChoiceState extends State<SingleChoice> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             onPressed: () {},
-            color: Color(0xff910A67),
+            color: const Color(0xff910A67),
           ),
         ),
         backgroundColor: Colors.black,
         body: Container(
-          padding: EdgeInsets.only(right: 20, left: 10),
+          padding: const EdgeInsets.only(right: 20, left: 10),
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.centers,
             children: [
@@ -42,7 +34,7 @@ class _SingleChoiceState extends State<SingleChoice> {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
                         backgroundColor: Colors.black),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -60,8 +52,8 @@ class _SingleChoiceState extends State<SingleChoice> {
                       ],
                     ),
                   ),
-                  Text(
-                    "1/3 2",
+                  const Text(
+                    "1/32",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
@@ -72,48 +64,35 @@ class _SingleChoiceState extends State<SingleChoice> {
                 decoration: const BoxDecoration(
                     image: DecorationImage(image: AssetImage('assets/eq.png'))),
               ),
-              ListTile(
-                title: Text("options 1", style: TextStyle(color: Colors.white)),
-                leading: Radio(
-                  value: options[0],
-                  groupValue: currentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      currentOption = value.toString();
-                    });
-                  },
+              const Text(
+                "Tell us how u feel",
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: width * 0.9,
+                child: TextField(
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: 'Input your answer here',
+                    hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 50, horizontal: 10),
+                  ),
                 ),
               ),
-              ListTile(
-                title: Text(
-                  "Options 2",
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Radio(
-                  value: options[1],
-                  groupValue: currentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      currentOption = value.toString();
-                    });
-                  },
-                ),
+              SizedBox(
+                height: height * 0.2,
               ),
-              ListTile(
-                title: Text(
-                  "options 3",
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Radio(
-                  value: options[2],
-                  groupValue: currentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      currentOption = value.toString();
-                    });
-                  },
-                ),
-              )
+              SizedBox(
+                width: width,
+                height: height * 0.05,
+                child:
+                    ElevatedButton(onPressed: () {}, child: const Text("Next")),
+              ),
             ],
           ),
         ),

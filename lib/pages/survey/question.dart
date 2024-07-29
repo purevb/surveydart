@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:survey/models/question.dart';
-import 'package:survey/pages/questions/question_types.dart/LogicalChoice.dart';
-import 'package:survey/pages/questions/question_types.dart/MultipleChoice.dart';
-import 'package:survey/pages/questions/question_types.dart/NumericChoice.dart';
-import 'package:survey/pages/questions/question_types.dart/SingleChoice.dart';
-import 'package:survey/pages/questions/question_types.dart/TextChoice.dart';
-import 'package:survey/services/answer_remote_service.dart';
-import 'package:survey/services/question_remote_service.dart';
+import 'package:survey/pages/questions/question_types.dart/logical_choice.dart';
+import 'package:survey/pages/questions/question_types.dart/multiple_choice.dart';
+import 'package:survey/pages/questions/question_types.dart/numeric_choice.dart';
+import 'package:survey/pages/questions/question_types.dart/single_choice.dart';
+import 'package:survey/pages/questions/question_types.dart/text_choice.dart';
 
 class QuizPage extends StatelessWidget {
-  QuizPage({super.key});
+  const QuizPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +16,14 @@ class QuizPage extends StatelessWidget {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.black,
           leading: IconButton(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             onPressed: () {},
-            color: Color(0xff910A67),
+            color: const Color(0xff910A67),
           ),
         ),
         backgroundColor: Colors.black,
         body: Container(
-          padding: EdgeInsets.only(right: 20, left: 10),
+          padding: const EdgeInsets.only(right: 20, left: 10),
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.centers,
             children: [
@@ -39,7 +35,7 @@ class QuizPage extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
                         backgroundColor: Colors.black),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -57,92 +53,99 @@ class QuizPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(
+                  const Text(
                     "1/32",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
               ),
-              Container(
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ElevatedButton(
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SingleChoice()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              backgroundColor: const Color(0xff030637)),
+                          child: const Text("SingleChoice"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SingleChoice()));
+                                      builder: (context) =>
+                                          const MultipleChoice()));
                             },
-                            child: Text("SingleChoice"),
                             style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                backgroundColor: Color(0xff030637)),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MultipleChoice()));
-                              },
-                              child: Text("MultipleChoice"),
-                              style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  backgroundColor: Color(0xff030637))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LogicalChoice()));
-                              },
-                              child: Text("LogicalChoice"),
-                              style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  backgroundColor: Color(0xff030637))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TextChoice()));
-                              },
-                              child: Text("TextChoice"),
-                              style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  backgroundColor: Color(0xff030637))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NumericChoice()));
-                              },
-                              child: Text("NumericChoice"),
-                              style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  backgroundColor: Color(0xff030637))),
-                        ),
-                      ],
-                    )),
-              )
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                backgroundColor: const Color(0xff030637)),
+                            child: const Text("MultipleChoice")),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LogicalChoice()));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                backgroundColor: const Color(0xff030637)),
+                            child: const Text("LogicalChoice")),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TextChoice()));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                backgroundColor: const Color(0xff030637)),
+                            child: const Text("TextChoice")),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const NumericChoice()));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                backgroundColor: const Color(0xff030637)),
+                            child: const Text("NumericChoice")),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),
