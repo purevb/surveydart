@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:survey/pages/questions/question_types.dart/logical_choice.dart';
 import 'package:survey/pages/questions/question_types.dart/multiple_choice.dart';
 import 'package:survey/pages/questions/question_types.dart/numeric_choice.dart';
 import 'package:survey/pages/questions/question_types.dart/single_choice.dart';
 import 'package:survey/pages/questions/question_types.dart/text_choice.dart';
 
-class QuizPage extends StatelessWidget {
-  const QuizPage({super.key});
+class QuizPage extends StatefulWidget {
+  final token;
+  const QuizPage({@required this.token, Key? key}) : super(key: key);
+
+  @override
+  State<QuizPage> createState() => _QuizPageState();
+}
+
+class _QuizPageState extends State<QuizPage> {
+  late String email;
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    email = jwtDecodedToken['email'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +42,7 @@ class QuizPage extends StatelessWidget {
           child: Column(
             // crossAxisAlignment: CrossAxisAlignment.centers,
             children: [
+              Text(email),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

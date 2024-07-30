@@ -96,7 +96,7 @@ class _LogicalChoiceState extends State<LogicalChoice> {
                     ),
                     if (questions != null && questions!.isNotEmpty)
                       Text(
-                        questions![1].questionText ?? "No question available",
+                        questions![1].questionText ?? "Noe",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
