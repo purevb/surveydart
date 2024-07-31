@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey/pages/login_page/components/square_tile.dart';
 import 'package:survey/pages/login_page/register_page.dart';
-import 'package:survey/pages/survey/question.dart';
+import 'package:survey/pages/survey/HomePage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         var myToken = jsonResponse['token'];
         await prefs.setString('token', myToken);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => QuizPage(token: myToken)));
+            MaterialPageRoute(builder: (context) => HomePage(token: myToken)));
       } else {
         print("aldaaa");
       }
