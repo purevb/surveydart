@@ -37,7 +37,7 @@ class RegisterPageState extends State<RegisterPage> {
             print(responseTest['status']);
             if (responseTest['status'] == true) {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             }
           });
         } else {

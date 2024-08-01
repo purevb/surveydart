@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:survey/models/survey_model.dart';
 import 'package:survey/pages/survey_answer/answer_page.dart';
@@ -47,6 +48,26 @@ class _HomePageState extends State<HomePage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      bottomNavigationBar: GNav(
+        tabBackgroundColor: Colors.black.withOpacity(0.2),
+        padding: const EdgeInsets.all(16),
+        tabMargin: const EdgeInsets.only(bottom: 8, right: 24, left: 24),
+        gap: 8,
+        tabs: const [
+          GButton(
+            icon: Icons.home,
+            text: 'Home',
+          ),
+          GButton(
+            icon: Icons.favorite,
+            text: 'Likes',
+          ),
+          GButton(
+            icon: Icons.settings,
+            text: 'Settings',
+          ),
+        ],
+      ),
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20),
@@ -91,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Container(
+                    SizedBox(
                       height: height * 0.63,
                       child: GridView.builder(
                         shrinkWrap: true,

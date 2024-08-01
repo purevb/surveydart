@@ -10,9 +10,11 @@ class SurveyRemoteService {
       var response = await client.get(uri);
       if (response.statusCode == 200) {
         var json = response.body;
+        print('Response JSON: $json');
         return surveyFromJson(json);
       } else {
-        print('Server error:');
+        print('Server error. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
       }
     } catch (e) {
       print('Network error: $e');
