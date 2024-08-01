@@ -56,7 +56,6 @@ class AllSurvey {
   final DateTime endDate;
   final bool surveyStatus;
   final String imgUrl;
-
   final List<Question> question;
 
   AllSurvey(
