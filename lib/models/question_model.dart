@@ -48,12 +48,12 @@ class QuestionModel {
         .toList();
 
     return QuestionModel(
-      id: json['_id'] as String,
-      surveyID: json['surveyID'] as String,
+      id: json['_id'] ?? '',
+      surveyID: json['surveyID'] ?? '',
       questionsTypeID: questionsTypeId,
-      questionText: json['question_text'] as String,
+      questionText: json['question_text'],
       answers: answersList.isNotEmpty ? answersList : null,
-      isMandatory: json['is_Mandatory'] as bool,
+      isMandatory: json['is_Mandatory'] ?? '',
     );
   }
 
