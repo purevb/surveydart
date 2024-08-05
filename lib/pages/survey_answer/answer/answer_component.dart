@@ -14,12 +14,12 @@ class AnswerTileState extends State<AnswerTile> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       itemCount: widget.answer.length,
       itemBuilder: (context, index) {
         return Container(
-          margin: const EdgeInsets.symmetric(vertical: 5), // Adjust margin
+          margin: const EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(8),

@@ -1,54 +1,114 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:survey/models/all_survey_model.dart';
+import 'package:survey/models/question_model.dart';
 import 'package:survey/models/survey_model.dart';
+import 'package:survey/pages/survey_answer/question/question_component.dart';
+import 'package:survey/pages/survey_answer/question/save_response.dart';
+import 'package:survey/provider/question_provider.dart';
+import 'package:survey/services/all_surveys_service.dart';
+import 'package:survey/services/question_service.dart';
 import 'package:survey/services/survey_service.dart';
-import 'package:survey/pages/survey_answer/question/test.dart';
 
-class HomePage extends StatefulWidget {
-  final String token;
-  const HomePage({required this.token, super.key});
+class AnswerPage extends StatefulWidget {
+  final String id;
+  const AnswerPage({super.key, required this.id});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AnswerPage> createState() => _AnswerPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  late String email;
-  String? name;
+class _AnswerPageState extends State<AnswerPage> {
+  List<AllSurvey>? allSurvey;
+  List<Survey>? surveys;
+  List<QuestionModel>? questions;
+  var isLoaded = false;
+  var dataProvider = QuestionProvider();
+  AllSurvey? myAllSurvey;
+  List<Question>? mySurveysQuestion = [];
+  int questionIndex = 0;
+
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-    email = jwtDecodedToken['email'];
     getSurveyData();
   }
-
-  List<Survey>? surveys;
-  var isLoaded = false;
 
   Future<void> getSurveyData() async {
     try {
       surveys = await SurveyRemoteService().getSurvey();
+      allSurvey = await AllSurveyRemoteService().getAllSurvey();
+      questions = await QuestionRemoteService().getQuestion();
 
-      // Provider.of<QuestionProvider>(context).survey!.addAll(surveys!);
-      if (surveys != null && surveys!.isNotEmpty) {
+      if (surveys != null &&
+          allSurvey != null &&
+          surveys!.isNotEmpty &&
+          allSurvey!.isNotEmpty &&
+          questions != null &&
+          questions!.isNotEmpty) {
         setState(() {
           isLoaded = true;
+          dataProvider.addSurvey(surveys!);
+          dataProvider.addQuestion(questions!);
+          dataProvider.addAllSurvey(allSurvey!);
         });
+        checkSurvey();
       } else {
-        print('No surveys found.');
+        print('No surveys or questions found.');
       }
     } catch (e) {
       print('Error loading surveys: $e');
     }
   }
 
+  void checkSurvey() {
+    if (dataProvider.allSurvey != null && dataProvider.allSurvey!.isNotEmpty) {
+      for (var providerSurvey in dataProvider.allSurvey!) {
+        if (widget.id == providerSurvey.id) {
+          setState(() {
+            myAllSurvey = providerSurvey;
+          });
+          extractSurvey(myAllSurvey!);
+          print(providerSurvey);
+        }
+      }
+    }
+  }
+
+  void extractSurvey(AllSurvey myAllSurvey) {
+    if (dataProvider.allSurvey != null && dataProvider.allSurvey!.isNotEmpty) {
+      setState(() {
+        mySurveysQuestion!.addAll(myAllSurvey.question);
+      });
+    }
+  }
+
+  void nextQuestion() {
+    if (questionIndex < mySurveysQuestion!.length - 1) {
+      setState(() {
+        questionIndex++;
+      });
+    } else {
+      print("No more questions.");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SaveResponse()));
+    }
+  }
+
+  void previousQuestion() {
+    if (questionIndex > 0) {
+      setState(() {
+        questionIndex--;
+      });
+    } else {
+      print("No more questions.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    int currentIndex = 0;
+
     return Scaffold(
       bottomNavigationBar: GNav(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -56,12 +116,6 @@ class _HomePageState extends State<HomePage> {
         tabBackgroundColor: Colors.black.withOpacity(0.2),
         padding: const EdgeInsets.all(15),
         tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
-        selectedIndex: currentIndex,
-        // onTabChange: (index) {
-        //   setState(() {
-        //     currentIndex = index;
-        //   });
-        // },
         gap: 0,
         tabs: const [
           GButton(
@@ -82,7 +136,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: isLoaded
+      body: isLoaded && myAllSurvey != null && mySurveysQuestion!.isNotEmpty
           ? Stack(
               alignment: Alignment.topCenter,
               children: [
@@ -129,85 +183,38 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                QuestionComponent(
+                    question: mySurveysQuestion![questionIndex],
+                    onNext: nextQuestion,
+                    onBack: previousQuestion,
+                    index: questionIndex,
+                    allIndex: mySurveysQuestion!.length),
                 Positioned(
-                  top: height * 0.18,
-                  child: SizedBox(
-                    width: width,
-                    height: height * 0.7,
-                    child: GridView.builder(
-                      padding: EdgeInsets.zero,
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1 / 1,
-                      ),
-                      itemCount: surveys!.length,
-                      itemBuilder: (context, index) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: GestureDetector(
-                            onTap: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          AnswerPage(id: surveys![index].id)))
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(25),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Image.network(
-                                      surveys![index].imgUrl,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    surveys![index].surveyName,
-                                    style: const TextStyle(fontSize: 18),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: width * 0.04,
                   top: height * 0.04,
+                  left: 0,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     icon: const Icon(
-                      Icons.menu,
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 24,
                       color: Colors.white,
                     ),
                   ),
                 ),
                 Positioned(
-                  left: width * 0.04,
                   top: height * 0.04,
+                  right: 0,
                   child: IconButton(
                     onPressed: () {},
                     icon: const Icon(
-                      Icons.person,
+                      Icons.storm,
+                      size: 24,
                       color: Colors.white,
                     ),
                   ),
                 ),
-                Positioned(
-                    top: height * 0.14,
-                    child: const Text(
-                      "All Surveys",
-                      style: TextStyle(fontSize: 24, fontFamily: 'Roboto'),
-                    ))
               ],
             )
           : const Center(
