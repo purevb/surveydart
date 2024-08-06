@@ -25,11 +25,13 @@ class Answer {
 class Question {
   final String id;
   final String questionText;
+  final String questionTypeId;
   final List<Answer> answerText;
 
   Question({
     required this.id,
     required this.questionText,
+    required this.questionTypeId,
     required this.answerText,
   });
 
@@ -40,12 +42,16 @@ class Question {
     return Question(
       id: json['_id'] ?? '',
       questionText: json['question_text'] ?? '',
+      questionTypeId: json['question_type'] ?? '',
       answerText: answerList,
     );
   }
 
-  Map<String, dynamic> toJson() =>
-      {"question_text": questionText, "answer_text": answerText};
+  Map<String, dynamic> toJson() => {
+        "question_text": questionText,
+        "question_type": questionTypeId,
+        "answer_text": answerText.map((answer) => answer.toJson()).toList(),
+      };
 }
 
 class AllSurvey {

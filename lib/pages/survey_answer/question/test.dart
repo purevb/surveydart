@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/models/question_model.dart';
 import 'package:survey/models/survey_model.dart';
@@ -88,10 +89,13 @@ class _AnswerPageState extends State<AnswerPage> {
       setState(() {
         questionIndex++;
       });
+      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
     } else {
       print("No more questions.");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SaveResponse()));
+      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
+
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SaveResponse()));
     }
   }
 
@@ -100,126 +104,136 @@ class _AnswerPageState extends State<AnswerPage> {
       setState(() {
         questionIndex--;
       });
+      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
     } else {
       print("No more questions.");
+      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
     }
+  }
+
+  Future<void> _handleRefresh() async {
+    await getSurveyData();
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      bottomNavigationBar: GNav(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        backgroundColor: const Color.fromARGB(255, 184, 169, 236),
-        tabBackgroundColor: Colors.black.withOpacity(0.2),
-        padding: const EdgeInsets.all(15),
-        tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
-        gap: 0,
-        tabs: const [
-          GButton(
-            icon: Icons.home,
-            text: 'Home',
-          ),
-          GButton(
-            icon: Icons.favorite,
-            text: 'Likes',
-          ),
-          GButton(
-            icon: Icons.search_sharp,
-            text: 'Search',
-          ),
-          GButton(
-            icon: Icons.settings,
-            text: 'Settings',
-          ),
-        ],
-      ),
-      body: isLoaded && myAllSurvey != null && mySurveysQuestion!.isNotEmpty
-          ? Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color.fromARGB(255, 187, 178, 202),
-                        Color(0xffe7e2fe)
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color.fromARGB(255, 57, 16, 122),
-                        Color.fromARGB(255, 183, 170, 241)
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: -80,
-                  child: Container(
-                    height: 200,
-                    width: 200,
+    return LiquidPullToRefresh(
+      onRefresh: _handleRefresh,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: GNav(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          backgroundColor: const Color.fromARGB(255, 184, 169, 236),
+          tabBackgroundColor: Colors.black.withOpacity(0.2),
+          padding: const EdgeInsets.all(15),
+          tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
+          gap: 0,
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+            ),
+            GButton(
+              icon: Icons.favorite,
+              text: 'Likes',
+            ),
+            GButton(
+              icon: Icons.search_sharp,
+              text: 'Search',
+            ),
+            GButton(
+              icon: Icons.settings,
+              text: 'Settings',
+            ),
+          ],
+        ),
+        body: isLoaded && myAllSurvey != null && mySurveysQuestion!.isNotEmpty
+            ? Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
                     decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        begin: Alignment.center,
-                        end: AlignmentDirectional.bottomCenter,
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                         colors: [
-                          Color.fromARGB(255, 57, 16, 122),
-                          Color.fromARGB(255, 218, 196, 243)
+                          Color.fromARGB(255, 187, 178, 202),
+                          Color(0xffe7e2fe)
                         ],
                       ),
                     ),
                   ),
-                ),
-                QuestionComponent(
-                    question: mySurveysQuestion![questionIndex],
-                    onNext: nextQuestion,
-                    onBack: previousQuestion,
-                    index: questionIndex,
-                    allIndex: mySurveysQuestion!.length),
-                Positioned(
-                  top: height * 0.04,
-                  left: 0,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      size: 24,
-                      color: Colors.white,
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromARGB(255, 57, 16, 122),
+                          Color.fromARGB(255, 183, 170, 241)
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  top: height * 0.04,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.storm,
-                      size: 24,
-                      color: Colors.white,
+                  Positioned(
+                    top: -80,
+                    child: Container(
+                      height: 200,
+                      width: 200,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.center,
+                          end: AlignmentDirectional.bottomCenter,
+                          colors: [
+                            Color.fromARGB(255, 57, 16, 122),
+                            Color.fromARGB(255, 218, 196, 243)
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
+                  QuestionComponent(
+                      question: mySurveysQuestion![questionIndex],
+                      onNext: nextQuestion,
+                      onBack: previousQuestion,
+                      index: questionIndex,
+                      allIndex: mySurveysQuestion!.length),
+                  Positioned(
+                    top: height * 0.04,
+                    left: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: height * 0.04,
+                    right: 0,
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.storm,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
+      ),
     );
   }
 }

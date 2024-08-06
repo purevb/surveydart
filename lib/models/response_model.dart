@@ -2,20 +2,23 @@
 import 'dart:convert';
 
 class Response {
-  final String responseId;
+  final String id;
+  final String surveyId;
   final String userId;
   final DateTime beginDate;
   final DateTime endDate;
 
   Response(
-      {required this.responseId,
+      {required this.id,
+      required this.surveyId,
       required this.userId,
       required this.beginDate,
       required this.endDate});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     return Response(
-        responseId: json['survey_id'],
+        id: json['_id'],
+        surveyId: json['survey_id'],
         userId: json['user_id'],
         beginDate: json['begin_date'],
         endDate: json['end_date']);
@@ -23,7 +26,8 @@ class Response {
 
   Map<String, dynamic> toJson() {
     return {
-      'survey_id': responseId,
+      '_id': id,
+      'survey_id': surveyId,
       'user_id': userId,
       'begin_date': beginDate,
       'end_date': endDate

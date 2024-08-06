@@ -118,8 +118,9 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         height: 4,
                       ),
                       Container(
-                        height: height * 0.32,
+                        height: height * 0.35,
                         child: AnswerTile(
+                            typeId: widget.question!.questionTypeId,
                             answer: widget.question!.answerText
                                 .map((e) => e.answerText)
                                 .toList()),
