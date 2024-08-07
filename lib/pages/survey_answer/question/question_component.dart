@@ -6,18 +6,18 @@ import 'package:survey/provider/question_provider.dart';
 
 class QuestionComponent extends StatefulWidget {
   final Question? question;
-  final VoidCallback onNext;
-  final VoidCallback onBack;
-  final int index;
-  final int allIndex;
+  final VoidCallback? onNext;
+  final VoidCallback? onBack;
+  final int? index;
+  final int? allIndex;
 
   const QuestionComponent({
     super.key,
-    required this.question,
-    required this.onNext,
-    required this.onBack,
-    required this.index,
-    required this.allIndex,
+    this.question,
+    this.onNext,
+    this.onBack,
+    this.index,
+    this.allIndex,
   });
 
   @override
@@ -90,8 +90,8 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         height: height * 0.01,
                       ),
                       StepProgressIndicator(
-                        totalSteps: widget.allIndex,
-                        currentStep: widget.index + 1,
+                        totalSteps: widget.allIndex!,
+                        currentStep: widget.index! + 1,
                         size: 8,
                         padding: 0.001,
                         selectedColor: Colors.yellow,
@@ -175,7 +175,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("${widget.index + 1}/${widget.allIndex}"),
+                              Text("${widget.index! + 1}/${widget.allIndex}"),
                               const Text(
                                 "Questions",
                                 style: TextStyle(fontSize: 16),

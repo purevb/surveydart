@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/models/question_model.dart';
 import 'package:survey/models/survey_model.dart';
 import 'package:survey/pages/survey_answer/question/question_component.dart';
-import 'package:survey/pages/survey_answer/question/save_response.dart';
+import 'package:survey/pages/survey_answer/question/save_answer.dart';
 import 'package:survey/provider/question_provider.dart';
 import 'package:survey/services/all_surveys_service.dart';
 import 'package:survey/services/question_service.dart';
@@ -25,6 +24,7 @@ class _AnswerPageState extends State<AnswerPage> {
   List<QuestionModel>? questions;
   var isLoaded = false;
   var dataProvider = QuestionProvider();
+  var saveProvider = QuestionProvider();
   AllSurvey? myAllSurvey;
   List<Question>? mySurveysQuestion = [];
   int questionIndex = 0;
@@ -39,17 +39,13 @@ class _AnswerPageState extends State<AnswerPage> {
     try {
       surveys = await SurveyRemoteService().getSurvey();
       allSurvey = await AllSurveyRemoteService().getAllSurvey();
-      questions = await QuestionRemoteService().getQuestion();
 
-      if (surveys != null &&
-          allSurvey != null &&
-          surveys!.isNotEmpty &&
+      if (allSurvey != null &&
           allSurvey!.isNotEmpty &&
           questions != null &&
           questions!.isNotEmpty) {
         setState(() {
           isLoaded = true;
-          dataProvider.addSurvey(surveys!);
           dataProvider.addQuestion(questions!);
           dataProvider.addAllSurvey(allSurvey!);
         });
@@ -89,13 +85,15 @@ class _AnswerPageState extends State<AnswerPage> {
       setState(() {
         questionIndex++;
       });
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
+      print(mySurveysQuestion![questionIndex].questionTypeId);
     } else {
       print("No more questions.");
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
-
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SaveResponse()));
+      print(mySurveysQuestion![questionIndex].questionTypeId);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  SaveAnswer(mySurveysQuestion: mySurveysQuestion)));
     }
   }
 
@@ -104,136 +102,128 @@ class _AnswerPageState extends State<AnswerPage> {
       setState(() {
         questionIndex--;
       });
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
+      print(mySurveysQuestion![questionIndex].questionTypeId);
     } else {
-      print("No more questions.");
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
+      print("This is the first question.");
     }
-  }
-
-  Future<void> _handleRefresh() async {
-    await getSurveyData();
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
 
-    return LiquidPullToRefresh(
-      onRefresh: _handleRefresh,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        bottomNavigationBar: GNav(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          backgroundColor: const Color.fromARGB(255, 184, 169, 236),
-          tabBackgroundColor: Colors.black.withOpacity(0.2),
-          padding: const EdgeInsets.all(15),
-          tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
-          gap: 0,
-          tabs: const [
-            GButton(
-              icon: Icons.home,
-              text: 'Home',
-            ),
-            GButton(
-              icon: Icons.favorite,
-              text: 'Likes',
-            ),
-            GButton(
-              icon: Icons.search_sharp,
-              text: 'Search',
-            ),
-            GButton(
-              icon: Icons.settings,
-              text: 'Settings',
-            ),
-          ],
-        ),
-        body: isLoaded && myAllSurvey != null && mySurveysQuestion!.isNotEmpty
-            ? Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color.fromARGB(255, 187, 178, 202),
-                          Color(0xffe7e2fe)
-                        ],
-                      ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: GNav(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        backgroundColor: const Color.fromARGB(255, 184, 169, 236),
+        tabBackgroundColor: Colors.black.withOpacity(0.2),
+        padding: const EdgeInsets.all(15),
+        tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
+        gap: 0,
+        tabs: const [
+          GButton(
+            icon: Icons.home,
+            text: 'Home',
+          ),
+          GButton(
+            icon: Icons.favorite,
+            text: 'Likes',
+          ),
+          GButton(
+            icon: Icons.search_sharp,
+            text: 'Search',
+          ),
+          GButton(
+            icon: Icons.settings,
+            text: 'Settings',
+          ),
+        ],
+      ),
+      body: isLoaded && myAllSurvey != null && mySurveysQuestion!.isNotEmpty
+          ? Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 187, 178, 202),
+                        Color(0xffe7e2fe)
+                      ],
                     ),
                   ),
-                  Container(
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 57, 16, 122),
+                        Color.fromARGB(255, 183, 170, 241)
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: -80,
+                  child: Container(
+                    height: 200,
+                    width: 200,
                     decoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
+                      shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                        begin: Alignment.center,
+                        end: AlignmentDirectional.bottomCenter,
                         colors: [
                           Color.fromARGB(255, 57, 16, 122),
-                          Color.fromARGB(255, 183, 170, 241)
+                          Color.fromARGB(255, 218, 196, 243)
                         ],
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: -80,
-                    child: Container(
-                      height: 200,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.center,
-                          end: AlignmentDirectional.bottomCenter,
-                          colors: [
-                            Color.fromARGB(255, 57, 16, 122),
-                            Color.fromARGB(255, 218, 196, 243)
-                          ],
-                        ),
-                      ),
+                ),
+                QuestionComponent(
+                    question: mySurveysQuestion![questionIndex],
+                    onNext: nextQuestion,
+                    onBack: previousQuestion,
+                    index: questionIndex,
+                    allIndex: mySurveysQuestion!.length),
+                Positioned(
+                  top: height * 0.04,
+                  left: 0,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 24,
+                      color: Colors.white,
                     ),
                   ),
-                  QuestionComponent(
-                      question: mySurveysQuestion![questionIndex],
-                      onNext: nextQuestion,
-                      onBack: previousQuestion,
-                      index: questionIndex,
-                      allIndex: mySurveysQuestion!.length),
-                  Positioned(
-                    top: height * 0.04,
-                    left: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        size: 24,
-                        color: Colors.white,
-                      ),
+                ),
+                Positioned(
+                  top: height * 0.04,
+                  right: 0,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.storm,
+                      size: 24,
+                      color: Colors.white,
                     ),
                   ),
-                  Positioned(
-                    top: height * 0.04,
-                    right: 0,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.storm,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
-      ),
+                ),
+              ],
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }

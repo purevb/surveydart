@@ -1,49 +1,52 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:survey/models/survey_model.dart';
+import 'package:survey/provider/save_provider.dart';
 import 'package:survey/services/survey_service.dart';
 import 'package:survey/pages/survey_answer/question/test.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String token;
-  const HomePage({required this.token, super.key});
+  final String id;
+  const HomePage({required this.token, required this.id, super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  UniqueKey _refreshKey = UniqueKey();
-
-  void refresh() {
-    setState(() {
-      _refreshKey = UniqueKey();
-    });
-  }
-
+  final UniqueKey _refreshKey = UniqueKey();
+  final beginDateController = TextEditingController();
+  final endDateController = TextEditingController();
+  late SharedPreferences prefs;
   late String email;
   String? name;
+  List<Survey>? surveys;
+  var isLoaded = false;
+  late String surveyID;
+  late DateTime beginDate;
+  var saveProvider = SaveProvider();
   @override
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
     email = jwtDecodedToken['email'];
     getSurveyData();
+    _handleRefresh();
   }
-
-  List<Survey>? surveys;
-  var isLoaded = false;
 
   Future<void> getSurveyData() async {
     try {
       surveys = await SurveyRemoteService().getSurvey();
-
-      // Provider.of<QuestionProvider>(context).survey!.addAll(surveys!);
       if (surveys != null && surveys!.isNotEmpty) {
         setState(() {
           isLoaded = true;
+          saveProvider.addSurvey(surveys!);
         });
       } else {
         print('No surveys found.');
@@ -58,12 +61,35 @@ class _HomePageState extends State<HomePage> {
     return await Future.delayed(const Duration(seconds: 1));
   }
 
+  void saveResponse() async {
+    prefs = await SharedPreferences.getInstance();
+    var reqBody = {
+      "survey_id": surveyID,
+      "user_id": widget.id,
+      "begin_date": beginDate.toIso8601String(),
+      "end_date":
+          endDateController.text.isEmpty ? null : endDateController.text,
+    };
+    var response = await http.post(
+      Uri.parse('http://10.0.2.2:3106/api/response'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(reqBody),
+    );
+    if (response.statusCode == 200) {
+      print('Response saved successfully');
+    } else {
+      print('Failed to save Response');
+      print(response.body);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     int currentIndex = 0;
     return LiquidPullToRefresh(
+      key: _refreshKey,
       onRefresh: _handleRefresh,
       color: Colors.deepPurple,
       backgroundColor: Colors.purple[100],
@@ -78,11 +104,11 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(15),
           tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
           selectedIndex: currentIndex,
-          // onTabChange: (index) {
-          //   setState(() {
-          //     currentIndex = index;
-          //   });
-          // },
+          onTabChange: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
           gap: 0,
           tabs: const [
             GButton(
@@ -114,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Color.fromARGB(255, 187, 178, 202),
-                          Color(0xffe7e2fe)
+                          Color(0xffe7e2fe),
                         ],
                       ),
                     ),
@@ -127,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Color.fromARGB(255, 57, 16, 122),
-                          Color.fromARGB(255, 183, 170, 241)
+                          Color.fromARGB(255, 183, 170, 241),
                         ],
                       ),
                     ),
@@ -144,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                           end: AlignmentDirectional.bottomCenter,
                           colors: [
                             Color.fromARGB(255, 57, 16, 122),
-                            Color.fromARGB(255, 218, 196, 243)
+                            Color.fromARGB(255, 218, 196, 243),
                           ],
                         ),
                       ),
@@ -164,17 +190,24 @@ class _HomePageState extends State<HomePage> {
                           crossAxisCount: 2,
                           childAspectRatio: 1 / 1,
                         ),
-                        itemCount: surveys!.length,
+                        itemCount: saveProvider.allSurvey!.length,
                         itemBuilder: (context, index) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: GestureDetector(
-                              onTap: () => {
+                              onTap: () {
+                                setState(() {
+                                  surveyID = saveProvider.allSurvey![index].id;
+                                  beginDate = DateTime.now();
+                                });
+                                saveResponse();
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AnswerPage(id: surveys![index].id)))
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AnswerPage(
+                                        id: saveProvider.allSurvey![index].id),
+                                  ),
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(25),
@@ -183,12 +216,12 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Expanded(
                                       child: Image.network(
-                                        surveys![index].imgUrl,
+                                        saveProvider.allSurvey![index].imgUrl,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      surveys![index].surveyName,
+                                      saveProvider.allSurvey![index].surveyName,
                                       style: const TextStyle(fontSize: 18),
                                       textAlign: TextAlign.center,
                                     ),
@@ -224,11 +257,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Positioned(
-                      top: height * 0.14,
-                      child: const Text(
-                        "All Surveys",
-                        style: TextStyle(fontSize: 24, fontFamily: 'Roboto'),
-                      ))
+                    top: height * 0.14,
+                    child: const Text(
+                      "All Surveys",
+                      style: TextStyle(fontSize: 24, fontFamily: 'Roboto'),
+                    ),
+                  ),
                 ],
               )
             : const Center(

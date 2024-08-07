@@ -1,36 +1,33 @@
-// Dart side
 import 'dart:convert';
 
 class AnswerOptionModel {
-  final String id;
-  final String questoinId;
+  final String questionId;
   final String responseId;
-  final String userChoice;
+  final List<String> userChoice;
   final String userId;
 
-  AnswerOptionModel(
-      {required this.id,
-      required this.questoinId,
-      required this.responseId,
-      required this.userChoice,
-      required this.userId});
+  AnswerOptionModel({
+    required this.questionId,
+    required this.responseId,
+    required this.userChoice,
+    required this.userId,
+  });
 
   factory AnswerOptionModel.fromJson(Map<String, dynamic> json) {
     return AnswerOptionModel(
-        id: json['_id'],
-        questoinId: json['question_id'],
-        responseId: json['response_id'],
-        userChoice: json['user_choice'],
-        userId: json['user_id']);
+      questionId: json['question_id'],
+      responseId: json['response_id'],
+      userChoice: List<String>.from(json['user_choice']),
+      userId: json['user_id'],
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
-      'question_id': questoinId,
+      'question_id': questionId,
       'response_id': responseId,
       'user_choice': userChoice,
-      'user_id': userId
+      'user_id': userId,
     };
   }
 }

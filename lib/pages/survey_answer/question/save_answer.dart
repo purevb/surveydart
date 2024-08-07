@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:survey/models/all_survey_model.dart';
 
-class SaveResponse extends StatefulWidget {
-  const SaveResponse({super.key});
+class SaveAnswer extends StatefulWidget {
+  List<Question>? mySurveysQuestion = [];
+
+  SaveAnswer({required this.mySurveysQuestion, super.key});
 
   @override
-  State<SaveResponse> createState() => SaveResponseState();
+  State<SaveAnswer> createState() => SaveResponseState();
 }
 
-class SaveResponseState extends State<SaveResponse> {
+class SaveResponseState extends State<SaveAnswer> {
   late String email;
   String? name;
 
@@ -110,22 +112,28 @@ class SaveResponseState extends State<SaveResponse> {
                   crossAxisCount: 2,
                   childAspectRatio: 1 / 1,
                 ),
-                itemCount: 10,
+                itemCount: widget.mySurveysQuestion!.length,
                 itemBuilder: (context, index) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      color: Colors.amber,
-                      padding: const EdgeInsets.all(25),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "sadas",
-                            style: TextStyle(fontSize: 18),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                    child: GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //   context, MaterialPageRoute(builder: (context)=>const QuestionComponent()));
+                      },
+                      child: Container(
+                        color: Colors.transparent.withOpacity(0.2),
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.mySurveysQuestion![index].questionText,
+                              style: const TextStyle(fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

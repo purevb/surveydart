@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AnswerTile extends StatefulWidget {
   final List<String> answer;
   final String typeId;
+
   const AnswerTile({required this.answer, required this.typeId, super.key});
 
   @override
@@ -51,21 +52,22 @@ class AnswerTileState extends State<AnswerTile> {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: CheckboxListTile(
-                        title: Text(
-                          widget.answer[index],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Roboto',
+                      child: ListTile(
+                          title: Text(
+                            widget.answer[index],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Roboto',
+                            ),
                           ),
-                        ),
-                        value: _isChecked[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isChecked[index] = value!;
-                          });
-                        },
-                      ));
+                          leading: Checkbox(
+                            value: _isChecked[index],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked[index] = value!;
+                              });
+                            },
+                          )));
                 } else {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 5),

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey/pages/login_page/components/square_tile.dart';
 import 'package:survey/pages/login_page/register_page.dart';
 import 'package:survey/pages/survey/home_page.dart';
+import 'package:survey/provider/save_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,16 +16,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
-
   final passWordController = TextEditingController();
   late SharedPreferences prefs;
-
+  var saveProvider = SaveProvider();
   @override
   void initState() {
     super.initState();
-    setState(() {
-      initSharedPrefs();
-    });
+    initSharedPrefs();
   }
 
   Future<void> initSharedPrefs() async {
@@ -46,11 +44,22 @@ class _LoginPageState extends State<LoginPage> {
       var jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status']) {
         var myToken = jsonResponse['token'];
+        var id = jsonResponse['id'];
         await prefs.setString('token', myToken);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => HomePage(token: myToken)));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(token: myToken, id: id),
+          ),
+        );
+        if (response.statusCode == 200) {
+          print('Question saved successfully');
+        } else {
+          print('Failed to save question');
+          print(response.body);
+        }
       } else {
-        print("aldaaa");
+        print("Error logging in");
       }
     }
   }
@@ -68,53 +77,42 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  const Icon(
-                    Icons.lock,
-                    size: 100,
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  const SizedBox(height: 50),
+                  const Icon(Icons.lock, size: 100),
+                  const SizedBox(height: 50),
                   Text(
                     'Welcome back you\'ve been missed!',
                     style: TextStyle(color: Colors.grey[700], fontSize: 16),
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  const SizedBox(height: 25),
                   TextField(
                     controller: emailController,
                     obscureText: false,
                     decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade400)),
-                        fillColor: Colors.grey.shade200,
-                        filled: true,
-                        hintText: 'Username or Password',
-                        hintStyle: TextStyle(color: Colors.grey[500])),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade400)),
+                      fillColor: Colors.grey.shade200,
+                      filled: true,
+                      hintText: 'Username or Password',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                    ),
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  const SizedBox(height: 25),
                   TextField(
                     controller: passWordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade400)),
-                        fillColor: Colors.grey.shade200,
-                        filled: true,
-                        hintText: 'Password',
-                        hintStyle: TextStyle(color: Colors.grey[500])),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade400)),
+                      fillColor: Colors.grey.shade200,
+                      filled: true,
+                      hintText: 'Password',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -125,17 +123,13 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           'Forgot password',
                           style: TextStyle(color: Colors.grey[600]),
-                        )
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   GestureDetector(
-                    onTap: () {
-                      signUserIn();
-                    },
+                    onTap: signUserIn,
                     child: Container(
                       padding: const EdgeInsets.all(25),
                       decoration: BoxDecoration(
@@ -154,9 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: Row(
@@ -175,16 +167,15 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Expanded(
-                            child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ))
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.grey[400],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 35,
-                  ),
+                  const SizedBox(height: 35),
                   const Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -199,30 +190,29 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  const SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text('Not a member?'),
                       GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterPage()));
-                          },
-                          child: const Text(
-                            'Register Now!',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
-                          ))
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()));
+                        },
+                        child: const Text(
+                          'Register Now!',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
