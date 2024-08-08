@@ -75,6 +75,8 @@ class _QuestionComponentState extends State<QuestionComponent> {
                               height: height * 0.25,
                               width: width * 0.85,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Image.asset('assets/placeholder.jpg'),
                             ),
                           ),
                           Text(

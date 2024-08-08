@@ -7,7 +7,7 @@ class QuestionProvider extends ChangeNotifier {
   List<AllSurvey>? allSurvey = [];
   List<Survey>? survey = [];
   List<QuestionModel>? questions = [];
-  // List<Question>? surveyQuestions = [];
+  List<Question>? surveyQuestions = [];
   int questionIndex = 0;
 
   void addSurvey(List<Survey> surveys) {

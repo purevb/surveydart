@@ -18,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passWordController = TextEditingController();
   late SharedPreferences prefs;
-  var saveProvider = SaveProvider();
   @override
   void initState() {
     super.initState();

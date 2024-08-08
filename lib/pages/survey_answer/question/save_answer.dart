@@ -28,11 +28,6 @@ class SaveResponseState extends State<SaveAnswer> {
         padding: const EdgeInsets.all(15),
         tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
         selectedIndex: currentIndex,
-        // onTabChange: (index) {
-        //   setState(() {
-        //     currentIndex = index;
-        //   });
-        // },
         gap: 0,
         tabs: const [
           GButton(
