@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/pages/survey_answer/answer/answer_component.dart';
@@ -122,6 +123,9 @@ class _QuestionComponentState extends State<QuestionComponent> {
                       Container(
                         height: height * 0.35,
                         child: AnswerTile(
+                            index: widget.index!,
+                            onBack: widget.onBack,
+                            onNext: widget.onNext,
                             typeId: widget.question!.questionTypeId,
                             answer: widget.question!.answerText
                                 .map((e) => e.answerText)
