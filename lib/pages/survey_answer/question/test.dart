@@ -124,6 +124,11 @@ class _AnswerPageState extends State<AnswerPage> {
 
     return LiquidPullToRefresh(
       onRefresh: _handleRefresh,
+      color: Colors.deepPurple,
+      backgroundColor: Colors.purple[100],
+      animSpeedFactor: 3,
+      showChildOpacityTransition: false,
+      height: 100,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: GNav(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/provider/save_provider.dart';
 
 class AnswerTile extends StatefulWidget {
-  final List<String> answer;
+  final List<Answer> answer;
   final String typeId;
   final VoidCallback? onNext;
   final VoidCallback? onBack;
@@ -23,15 +24,20 @@ class AnswerTile extends StatefulWidget {
 
 class AnswerTileState extends State<AnswerTile> {
   final textFieldController = TextEditingController();
-  late List<bool> _isChecked;
-  var saveAnswer = SaveProvider();
+  late Map<int, Map<int, bool>> isChecked;
+  final SaveProvider saveAnswer = SaveProvider();
   late Map<int, int?> selectedAnswer;
 
   @override
   void initState() {
     super.initState();
-    _isChecked = List<bool>.filled(widget.answer.length, false);
     selectedAnswer = {};
+    isChecked = {
+      for (int i = 0; i < widget.answer.length; i++)
+        i: {
+          for (int j = 0; j < widget.answer[i].answerText.length; j++) j: false
+        }
+    };
   }
 
   void saveCurrentAnswers() {
@@ -39,15 +45,18 @@ class AnswerTileState extends State<AnswerTile> {
       saveAnswer.saveAnswers([textFieldController.text]);
     } else if (widget.typeId.contains("669763b497492aac645169c1")) {
       List<String> selectedAnswers = [];
-      for (int i = 0; i < _isChecked.length; i++) {
-        if (_isChecked[i]) {
-          selectedAnswers.add(widget.answer[i]);
+      for (int i = 0; i < widget.answer.length; i++) {
+        for (int j = 0; j < widget.answer[i].answerText.length; j++) {
+          if (isChecked[i]![j] == true) {
+            selectedAnswers.add(widget.answer[i].id[j]);
+          }
         }
       }
       saveAnswer.saveAnswers(selectedAnswers);
     } else {
       if (selectedAnswer[widget.index] != null) {
-        saveAnswer.saveAnswers([widget.answer[selectedAnswer[widget.index]!]]);
+        saveAnswer
+            .saveAnswers([widget.answer[selectedAnswer[widget.index]!].id]);
       }
     }
   }
@@ -62,7 +71,7 @@ class AnswerTileState extends State<AnswerTile> {
             child: ListView.builder(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              itemCount: widget.answer.isEmpty ? 1 : widget.answer.length,
+              itemCount: widget.answer.length,
               itemBuilder: (context, index) {
                 if (widget.typeId.contains("66b19afb79959b160726b2c4")) {
                   return Padding(
@@ -93,21 +102,21 @@ class AnswerTileState extends State<AnswerTile> {
                     ),
                     child: ListTile(
                       title: Text(
-                        widget.answer[index],
+                        widget.answer[index].answerText,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Roboto',
                         ),
                       ),
                       leading: Checkbox(
-                        value: _isChecked[index],
+                        value: isChecked[widget.index]?[index],
                         onChanged: (bool? value) {
                           setState(() {
-                            _isChecked[index] = value!;
+                            isChecked[widget.index]?[index] = value ?? false;
                             List<String> selectedAnswers = [];
-                            for (int i = 0; i < _isChecked.length; i++) {
-                              if (_isChecked[i]) {
-                                selectedAnswers.add(widget.answer[i]);
+                            for (int i = 0; i < isChecked.length; i++) {
+                              if (isChecked[i]?[index] == true) {
+                                selectedAnswers.add(widget.answer[i].id);
                               }
                             }
                             saveAnswer.saveAnswers(selectedAnswers);
@@ -125,7 +134,7 @@ class AnswerTileState extends State<AnswerTile> {
                     ),
                     child: RadioListTile<int>(
                       title: Text(
-                        widget.answer[index],
+                        widget.answer[index].answerText,
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Roboto',
@@ -137,7 +146,7 @@ class AnswerTileState extends State<AnswerTile> {
                         setState(() {
                           selectedAnswer[widget.index] = value;
                           if (value != null) {
-                            saveAnswer.saveAnswers([widget.answer[value]]);
+                            saveAnswer.saveAnswers([widget.answer[value].id]);
                           }
                         });
                       },
@@ -147,25 +156,6 @@ class AnswerTileState extends State<AnswerTile> {
               },
             ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     ElevatedButton(
-          //       onPressed: () {
-          //         saveCurrentAnswers();
-          //         if (widget.onBack != null) widget.onBack!();
-          //       },
-          //       child: const Text('Back'),
-          //     ),
-          //     ElevatedButton(
-          //       onPressed: () {
-          //         saveCurrentAnswers();
-          //         if (widget.onNext != null) widget.onNext!();
-          //       },
-          //       child: const Text('Next'),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );

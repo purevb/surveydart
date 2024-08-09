@@ -121,16 +121,16 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         height: 4,
                       ),
                       Container(
-                        height: height * 0.35,
-                        child: AnswerTile(
+                          height: height * 0.35,
+                          child: AnswerTile(
                             index: widget.index!,
                             onBack: widget.onBack,
                             onNext: widget.onNext,
                             typeId: widget.question!.questionTypeId,
                             answer: widget.question!.answerText
-                                .map((e) => e.answerText)
-                                .toList()),
-                      ),
+                                .map((e) => e)
+                                .toList(),
+                          )),
                     ],
                   ),
                   Row(

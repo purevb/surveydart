@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:survey/models/all_survey_model.dart';
+import 'package:survey/pages/survey_answer/question/question_component.dart';
 import 'package:survey/provider/save_provider.dart';
 
 class SaveAnswer extends StatefulWidget {
@@ -115,7 +116,10 @@ class SaveResponseState extends State<SaveAnswer> {
                     child: GestureDetector(
                       onTap: () {
                         // Navigator.push(
-                        //   context, MaterialPageRoute(builder: (context)=>const QuestionComponent()));
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             const QuestionComponent()));
                       },
                       child: Container(
                         color: Colors.transparent.withOpacity(0.2),

@@ -190,22 +190,22 @@ class _HomePageState extends State<HomePage> {
                           crossAxisCount: 2,
                           childAspectRatio: 1 / 1,
                         ),
-                        itemCount: saveProvider.allSurvey!.length,
+                        itemCount: surveys!.length,
                         itemBuilder: (context, index) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  surveyID = saveProvider.allSurvey![index].id;
+                                  surveyID = surveys![index].id;
                                   beginDate = DateTime.now();
                                 });
                                 saveResponse();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AnswerPage(
-                                        id: saveProvider.allSurvey![index].id),
+                                    builder: (context) =>
+                                        AnswerPage(id: surveys![index].id),
                                   ),
                                 );
                               },
@@ -216,12 +216,12 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Expanded(
                                       child: Image.network(
-                                        saveProvider.allSurvey![index].imgUrl,
+                                        surveys![index].imgUrl,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      saveProvider.allSurvey![index].surveyName,
+                                      surveys![index].surveyName,
                                       style: const TextStyle(fontSize: 18),
                                       textAlign: TextAlign.center,
                                     ),
