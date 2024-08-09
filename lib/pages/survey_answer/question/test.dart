@@ -123,12 +123,12 @@ class _AnswerPageState extends State<AnswerPage> {
     double height = MediaQuery.of(context).size.height;
 
     return LiquidPullToRefresh(
-      onRefresh: _handleRefresh,
       color: Colors.deepPurple,
       backgroundColor: Colors.purple[100],
       animSpeedFactor: 3,
       showChildOpacityTransition: false,
       height: 100,
+      onRefresh: _handleRefresh,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: GNav(

@@ -71,7 +71,7 @@ class AnswerTileState extends State<AnswerTile> {
             child: ListView.builder(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
-              itemCount: widget.answer.length,
+              itemCount: widget.answer.isEmpty ? 1 : widget.answer.length,
               itemBuilder: (context, index) {
                 if (widget.typeId.contains("66b19afb79959b160726b2c4")) {
                   return Padding(
