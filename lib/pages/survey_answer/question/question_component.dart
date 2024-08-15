@@ -1,58 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/pages/survey_answer/answer/answer_component.dart';
 import 'package:survey/provider/question_provider.dart';
-import 'package:survey/provider/save_provider.dart';
 
 class QuestionComponent extends StatefulWidget {
+  final String surveyId;
+  final String responseId;
+  final String userId;
   final Question? question;
   final VoidCallback? onNext;
   final VoidCallback? onBack;
   final int? index;
   final int? allIndex;
 
-  const QuestionComponent({
-    super.key,
-    this.question,
-    this.onNext,
-    this.onBack,
-    this.index,
-    this.allIndex,
-  });
+  const QuestionComponent(
+      {super.key,
+      this.question,
+      this.onNext,
+      this.onBack,
+      this.index,
+      this.allIndex,
+      required this.surveyId,
+      required this.responseId,
+      required this.userId});
 
   @override
   State<QuestionComponent> createState() => _QuestionComponentState();
 }
 
 class _QuestionComponentState extends State<QuestionComponent> {
-  List<Answer>? answers = []; // Initialize as an empty list
   int index = 0;
   int questionIndex = 0;
-
-  final textFieldController = TextEditingController();
-  late Map<int, Map<int, bool>> isChecked;
-  final SaveProvider saveAnswer = SaveProvider();
-  late Map<int, int?> selectedAnswer;
-
-  void getAnswers() {
-    setState(() {
-      answers!.addAll(widget.question!.answerText.map((e) => e).toList());
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     knowNumber();
-    if (widget.question != null) {
-      getAnswers();
-    }
-    selectedAnswer = {};
-    isChecked = {
-      for (int i = 0; i < answers!.length; i++)
-        i: {for (int j = 0; j < answers![i].answerText.length; j++) j: false}
-    };
   }
 
   var dataProvider = QuestionProvider();
@@ -61,27 +46,6 @@ class _QuestionComponentState extends State<QuestionComponent> {
     setState(() {
       index == dataProvider.questionIndex;
     });
-  }
-
-  void saveCurrentAnswers() {
-    if (widget.question!.questionTypeId.contains("66b19afb79959b160726b2c4")) {
-      saveAnswer.saveAnswers([textFieldController.text]);
-    } else if (widget.question!.questionTypeId
-        .contains("669763b497492aac645169c1")) {
-      List<String> selectedAnswers = [];
-      for (int i = 0; i < answers!.length; i++) {
-        for (int j = 0; j < answers![i].answerText.length; j++) {
-          if (isChecked[i]![j] == true) {
-            selectedAnswers.add(answers![i].id[j]);
-          }
-        }
-      }
-      saveAnswer.saveAnswers(selectedAnswers);
-    } else {
-      if (selectedAnswer[widget.index] != null) {
-        saveAnswer.saveAnswers([answers![selectedAnswer[widget.index]!].id]);
-      }
-    }
   }
 
   @override
@@ -161,117 +125,20 @@ class _QuestionComponentState extends State<QuestionComponent> {
                       const SizedBox(
                         height: 4,
                       ),
-                      Container(
-                        height: height * 0.35,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                itemCount:
-                                    answers!.isEmpty ? 1 : answers!.length,
-                                itemBuilder: (context, index) {
-                                  if (widget.question!.questionTypeId
-                                      .contains("66b19afb79959b160726b2c4")) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5, horizontal: 8),
-                                      child: TextField(
-                                        controller: textFieldController,
-                                        decoration: const InputDecoration(
-                                          hintMaxLines: 5,
-                                          helperMaxLines: 5,
-                                          contentPadding: EdgeInsets.symmetric(
-                                              vertical: 80),
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Tanii bodol',
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            saveAnswer.saveAnswers([value]);
-                                          });
-                                        },
-                                      ),
-                                    );
-                                  } else if (widget.question!.questionTypeId
-                                      .contains("669763b497492aac645169c1")) {
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: ListTile(
-                                        title: Text(
-                                          answers![index].answerText,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Roboto',
-                                          ),
-                                        ),
-                                        leading: Checkbox(
-                                          value: isChecked[widget.index]
-                                              ?[index],
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              isChecked[widget.index]?[index] =
-                                                  value ?? false;
-                                              List<String> selectedAnswers = [];
-                                              for (int i = 0;
-                                                  i < isChecked.length;
-                                                  i++) {
-                                                if (isChecked[i]?[index] ==
-                                                    true) {
-                                                  selectedAnswers
-                                                      .add(answers![i].id);
-                                                }
-                                              }
-                                              saveAnswer
-                                                  .saveAnswers(selectedAnswers);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: RadioListTile<int>(
-                                        title: Text(
-                                          answers![index].answerText,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Roboto',
-                                          ),
-                                        ),
-                                        value: index,
-                                        groupValue: selectedAnswer[index],
-                                        onChanged: (int? value) {
-                                          setState(() {
-                                            selectedAnswer[index] = value;
-                                            if (value != null) {
-                                              saveAnswer.saveAnswers(
-                                                  [answers![value].id]);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      SizedBox(
+                          height: height * 0.35,
+                          child: AnswerTile(
+                            index: widget.index!,
+                            onBack: widget.onBack,
+                            onNext: widget.onNext,
+                            typeId: widget.question!.questionTypeId,
+                            questionId: widget.question!.id,
+                            responseId: widget.responseId,
+                            userId: widget.userId,
+                            answer: widget.question!.answerText
+                                .map((e) => e)
+                                .toList(),
+                          )),
                     ],
                   ),
                   Row(
@@ -296,7 +163,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                               Icon(Icons.keyboard_double_arrow_left_sharp),
                               Text(
                                 "Back",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                style: TextStyle(fontSize: 16),
                               )
                             ],
                           ),
@@ -364,10 +231,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {
-                          saveCurrentAnswers();
-                          widget.onNext?.call();
-                        },
+                        onTap: widget.onNext,
                         child: Container(
                           width: width * 0.2,
                           height: height * 0.06,
@@ -381,18 +245,20 @@ class _QuestionComponentState extends State<QuestionComponent> {
                                   ]),
                               borderRadius: BorderRadius.circular(16)),
                           child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(Icons.keyboard_double_arrow_right_sharp),
                               Text(
                                 "Next",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                style: TextStyle(fontSize: 16),
                               )
                             ],
                           ),
                         ),
-                      )
+                      ),
                     ],
-                  ),
+                  )
                 ],
               ),
             ),

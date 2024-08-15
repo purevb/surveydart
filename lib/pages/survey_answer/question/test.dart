@@ -12,8 +12,14 @@ import 'package:survey/services/question_service.dart';
 import 'package:survey/services/survey_service.dart';
 
 class AnswerPage extends StatefulWidget {
-  final String id;
-  const AnswerPage({super.key, required this.id});
+  final String surveyId;
+  final String responseId;
+  final String userId;
+  const AnswerPage(
+      {super.key,
+      required this.surveyId,
+      required this.responseId,
+      required this.userId});
 
   @override
   State<AnswerPage> createState() => _AnswerPageState();
@@ -65,7 +71,7 @@ class _AnswerPageState extends State<AnswerPage> {
   void checkSurvey() {
     if (dataProvider.allSurvey != null && dataProvider.allSurvey!.isNotEmpty) {
       for (var providerSurvey in dataProvider.allSurvey!) {
-        if (widget.id == providerSurvey.id) {
+        if (widget.surveyId == providerSurvey.id) {
           setState(() {
             myAllSurvey = providerSurvey;
           });
@@ -97,8 +103,12 @@ class _AnswerPageState extends State<AnswerPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  SaveAnswer(mySurveysQuestion: mySurveysQuestion)));
+              builder: (context) => SaveAnswer(
+                    mySurveysQuestion: mySurveysQuestion,
+                    surveyId: widget.surveyId,
+                    userId: widget.userId,
+                    responseId: widget.responseId,
+                  )));
     }
   }
 
@@ -125,7 +135,7 @@ class _AnswerPageState extends State<AnswerPage> {
     return LiquidPullToRefresh(
       color: Colors.deepPurple,
       backgroundColor: Colors.purple[100],
-      animSpeedFactor: 3,
+      animSpeedFactor: 6,
       showChildOpacityTransition: false,
       height: 100,
       onRefresh: _handleRefresh,
@@ -206,6 +216,9 @@ class _AnswerPageState extends State<AnswerPage> {
                   ),
                   QuestionComponent(
                       question: mySurveysQuestion![questionIndex],
+                      surveyId: widget.surveyId,
+                      responseId: widget.responseId,
+                      userId: widget.userId,
                       onNext: nextQuestion,
                       onBack: previousQuestion,
                       index: questionIndex,

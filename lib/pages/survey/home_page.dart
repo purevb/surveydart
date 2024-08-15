@@ -11,9 +11,13 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  final String token;
+  // String? token;
   final String id;
-  const HomePage({required this.token, required this.id, super.key});
+  HomePage(
+      {
+      // this.token,
+      required this.id,
+      super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -30,12 +34,14 @@ class _HomePageState extends State<HomePage> {
   var isLoaded = false;
   late String surveyID;
   late DateTime beginDate;
+  late String responseId;
   var saveProvider = SaveProvider();
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-    email = jwtDecodedToken['email'];
+    // Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
+    // email = jwtDecodedToken['email'];
+    responseId = "";
     getSurveyData();
     _handleRefresh();
   }
@@ -70,12 +76,19 @@ class _HomePageState extends State<HomePage> {
       "end_date":
           endDateController.text.isEmpty ? null : endDateController.text,
     };
+
     var response = await http.post(
       Uri.parse('http://10.0.2.2:3106/api/response'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(reqBody),
     );
+
     if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      setState(() {
+        responseId = responseData['response']['_id'];
+      });
+
       print('Response saved successfully');
     } else {
       print('Failed to save Response');
@@ -204,8 +217,11 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        AnswerPage(id: surveys![index].id),
+                                    builder: (context) => AnswerPage(
+                                      surveyId: surveys![index].id,
+                                      userId: widget.id,
+                                      responseId: responseId,
+                                    ),
                                   ),
                                 );
                               },

@@ -3,6 +3,9 @@ import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/provider/save_provider.dart';
 
 class AnswerTile extends StatefulWidget {
+  final String questionId;
+  final String responseId;
+  final String userId;
   final List<Answer> answer;
   final String typeId;
   final VoidCallback? onNext;
@@ -15,6 +18,9 @@ class AnswerTile extends StatefulWidget {
     required this.onBack,
     required this.answer,
     required this.typeId,
+    required this.questionId,
+    required this.responseId,
+    required this.userId,
     super.key,
   });
 

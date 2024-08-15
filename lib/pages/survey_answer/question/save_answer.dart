@@ -1,13 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:survey/models/all_survey_model.dart';
-import 'package:survey/pages/survey_answer/question/question_component.dart';
+import 'package:survey/models/answer_options_model.dart';
+import 'package:survey/pages/survey/home_page.dart';
 import 'package:survey/provider/save_provider.dart';
+import 'package:http/http.dart' as http;
 
 class SaveAnswer extends StatefulWidget {
   List<Question>? mySurveysQuestion = [];
-
-  SaveAnswer({required this.mySurveysQuestion, super.key});
+  final String surveyId;
+  final String responseId;
+  final String userId;
+  SaveAnswer(
+      {required this.surveyId,
+      required this.responseId,
+      required this.userId,
+      required this.mySurveysQuestion,
+      super.key});
 
   @override
   State<SaveAnswer> createState() => SaveResponseState();
@@ -17,6 +28,39 @@ class SaveResponseState extends State<SaveAnswer> {
   late String email;
   String? name;
   var saveProvider = SaveProvider();
+  void saveAllResponses(List<AnswerOptionModel> reponses) async {
+    final url = Uri.parse('http://localhost:3106/api/reponses');
+    try {
+      final questionJson = reponses.map((r) => r.toJson()).toList();
+      // print(questionJson);
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'questions': questionJson}),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(
+                      id: widget.userId,
+                    )));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Questions saved successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save questions')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error occurred while posting questions')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -144,7 +188,15 @@ class SaveResponseState extends State<SaveAnswer> {
           Positioned(
             top: height * 0.8,
             child: ElevatedButton(
-                onPressed: () {}, child: const Text("Save Button")),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                                id: widget.userId,
+                              )));
+                },
+                child: const Text("Save Button")),
           ),
           Positioned(
             top: height * 0.04,

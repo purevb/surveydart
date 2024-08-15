@@ -47,7 +47,9 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(token: myToken, id: id),
+            builder: (context) => HomePage(
+                // token: myToken,
+                id: id),
           ),
         );
         if (response.statusCode == 200) {
