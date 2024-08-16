@@ -95,20 +95,20 @@ class _AnswerPageState extends State<AnswerPage> {
       setState(() {
         questionIndex++;
       });
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
     } else {
       print("No more questions.");
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
 
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SaveAnswer(
-                    mySurveysQuestion: mySurveysQuestion,
-                    surveyId: widget.surveyId,
-                    userId: widget.userId,
-                    responseId: widget.responseId,
-                  )));
+        context,
+        MaterialPageRoute(
+          builder: (context) => SaveAnswer(
+            mySurveysQuestion: mySurveysQuestion,
+            surveyId: widget.surveyId,
+            userId: widget.userId,
+            responseId: widget.responseId,
+          ),
+        ),
+      );
     }
   }
 
@@ -117,10 +117,10 @@ class _AnswerPageState extends State<AnswerPage> {
       setState(() {
         questionIndex--;
       });
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
+      // print(mySurveysQuestion![questionIndex].questionTypeId.toString());
     } else {
       print("No more questions.");
-      print(mySurveysQuestion![questionIndex].questionTypeId.toString());
+      // print(mySurveysQuestion![questionIndex].questionTypeId.toString());
     }
   }
 

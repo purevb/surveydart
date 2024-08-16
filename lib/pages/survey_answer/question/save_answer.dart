@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/models/answer_options_model.dart';
 import 'package:survey/pages/survey/home_page.dart';
@@ -27,16 +28,33 @@ class SaveAnswer extends StatefulWidget {
 class SaveResponseState extends State<SaveAnswer> {
   late String email;
   String? name;
+
   var saveProvider = SaveProvider();
-  void saveAllResponses(List<AnswerOptionModel> reponses) async {
-    final url = Uri.parse('http://localhost:3106/api/reponses');
+
+  void collectSaveQuestions() {
+    // saveProvider.saveMyResponse();
+    List<AnswerOptionModel> savedOptions = [];
+
+    saveProvider.savedMyAnswers.forEach((questionId, answers) {
+      AnswerOptionModel aoption = AnswerOptionModel(
+        questionId: questionId,
+        responseId: widget.responseId,
+        userId: widget.userId,
+        userChoice: answers,
+      );
+      savedOptions.add(aoption);
+    });
+    saveAllResponses(savedOptions);
+  }
+
+  void saveAllResponses(List<AnswerOptionModel> answers) async {
+    final url = Uri.parse('http://10.0.2.2:3106/api/aoptionses');
     try {
-      final questionJson = reponses.map((r) => r.toJson()).toList();
-      // print(questionJson);
+      final answersJson = answers.map((r) => r.toJson()).toList();
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'questions': questionJson}),
+        body: json.encode({'aoption': answersJson}),
       );
       print(response.body);
       if (response.statusCode == 200) {
@@ -56,8 +74,10 @@ class SaveResponseState extends State<SaveAnswer> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error occurred while posting questions')),
+        const SnackBar(
+            content: Text('Error occurred while posting questions ')),
       );
+      print(e);
     }
   }
 
@@ -189,13 +209,11 @@ class SaveResponseState extends State<SaveAnswer> {
             top: height * 0.8,
             child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(
-                                id: widget.userId,
-                              )));
+                  // print(
+                  //     "${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}+sda");
+                  saveAllResponses(saveProvider.saveResponse);
                 },
+                // print(saveAnswer.savedMyAnswers.values.toList());
                 child: const Text("Save Button")),
           ),
           Positioned(

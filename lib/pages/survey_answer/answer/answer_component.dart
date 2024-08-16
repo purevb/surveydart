@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/provider/save_provider.dart';
 
@@ -8,8 +9,8 @@ class AnswerTile extends StatefulWidget {
   final String userId;
   final List<Answer> answer;
   final String typeId;
-  final VoidCallback? onNext;
-  final VoidCallback? onBack;
+  final bool? onNext;
+  final bool? onBack;
   final int index;
 
   const AnswerTile({
@@ -31,8 +32,9 @@ class AnswerTile extends StatefulWidget {
 class AnswerTileState extends State<AnswerTile> {
   final textFieldController = TextEditingController();
   late Map<int, Map<int, bool>> isChecked;
-  final SaveProvider saveAnswer = SaveProvider();
+  var saveAnswer = SaveProvider();
   late Map<int, int?> selectedAnswer;
+  late String text;
 
   @override
   void initState() {
@@ -40,31 +42,35 @@ class AnswerTileState extends State<AnswerTile> {
     selectedAnswer = {};
     isChecked = {
       for (int i = 0; i < widget.answer.length; i++)
-        i: {
-          for (int j = 0; j < widget.answer[i].answerText.length; j++) j: false
-        }
+        i: {for (int j = 0; j < widget.answer.length; j++) j: false}
     };
   }
 
   void saveCurrentAnswers() {
     if (widget.typeId.contains("66b19afb79959b160726b2c4")) {
-      saveAnswer.saveAnswers([textFieldController.text]);
+      if (widget.onBack == true || widget.onNext == true) {
+        Provider.of<SaveProvider>(context, listen: false)
+            .saveAnswers(widget.questionId, [text]);
+      }
     } else if (widget.typeId.contains("669763b497492aac645169c1")) {
       List<String> selectedAnswers = [];
       for (int i = 0; i < widget.answer.length; i++) {
-        for (int j = 0; j < widget.answer[i].answerText.length; j++) {
-          if (isChecked[i]![j] == true) {
-            selectedAnswers.add(widget.answer[i].id[j]);
-          }
+        if (isChecked[widget.index]![i] == true &&
+            (widget.onBack == true || widget.onNext == true)) {
+          selectedAnswers.add(widget.answer[i].id);
         }
       }
-      saveAnswer.saveAnswers(selectedAnswers);
+      Provider.of<SaveProvider>(context, listen: false)
+          .saveAnswers(widget.questionId, selectedAnswers);
     } else {
-      if (selectedAnswer[widget.index] != null) {
-        saveAnswer
-            .saveAnswers([widget.answer[selectedAnswer[widget.index]!].id]);
+      if (selectedAnswer[widget.index] != null &&
+          (widget.onBack == true || widget.onNext == true)) {
+        Provider.of<SaveProvider>(context, listen: false).saveAnswers(
+            widget.questionId,
+            [widget.answer[selectedAnswer[widget.index]!].id]);
       }
     }
+    print(saveAnswer.savedMyAnswers.values.toList());
   }
 
   @override
@@ -90,11 +96,16 @@ class AnswerTileState extends State<AnswerTile> {
                         helperMaxLines: 5,
                         contentPadding: EdgeInsets.symmetric(vertical: 80),
                         border: OutlineInputBorder(),
-                        labelText: 'Tanii bodol',
+                        labelText: 'Your Opinion',
                       ),
                       onChanged: (value) {
                         setState(() {
-                          saveAnswer.saveAnswers([value]);
+                          text = value;
+                        });
+                      },
+                      onSubmitted: (value) {
+                        setState(() {
+                          saveAnswer.saveAnswers(widget.questionId, [text]);
                         });
                       },
                     ),
@@ -125,7 +136,8 @@ class AnswerTileState extends State<AnswerTile> {
                                 selectedAnswers.add(widget.answer[i].id);
                               }
                             }
-                            saveAnswer.saveAnswers(selectedAnswers);
+                            saveAnswer.saveAnswers(
+                                widget.questionId, selectedAnswers);
                           });
                         },
                       ),
@@ -152,7 +164,8 @@ class AnswerTileState extends State<AnswerTile> {
                         setState(() {
                           selectedAnswer[widget.index] = value;
                           if (value != null) {
-                            saveAnswer.saveAnswers([widget.answer[value].id]);
+                            saveAnswer.saveAnswers(
+                                widget.questionId, [widget.answer[value].id]);
                           }
                         });
                       },
