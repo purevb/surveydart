@@ -35,8 +35,8 @@ class AnswerOptionModel {
 List<AnswerOptionModel> typeFromJson(String str) {
   final jsonData = json.decode(str);
   return List<AnswerOptionModel>.from(
-      jsonData["answers_options"].map((x) => AnswerOptionModel.fromJson(x)));
+      jsonData["aoption"].map((x) => AnswerOptionModel.fromJson(x)));
 }
 
-String typeToJson(List<AnswerOptionModel> data) => json.encode(
-    {"answers_options": List<dynamic>.from(data.map((x) => x.toJson()))});
+String typeToJson(List<AnswerOptionModel> data) =>
+    json.encode({"aoption": List<dynamic>.from(data.map((x) => x.toJson()))});

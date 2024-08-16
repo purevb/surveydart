@@ -35,7 +35,9 @@ class SaveResponseState extends State<SaveAnswer> {
     // saveProvider.saveMyResponse();
     List<AnswerOptionModel> savedOptions = [];
 
-    saveProvider.savedMyAnswers.forEach((questionId, answers) {
+    Provider.of<SaveProvider>(context, listen: false)
+        .savedMyAnswers
+        .forEach((questionId, answers) {
       AnswerOptionModel aoption = AnswerOptionModel(
         questionId: questionId,
         responseId: widget.responseId,
@@ -192,7 +194,8 @@ class SaveResponseState extends State<SaveAnswer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.mySurveysQuestion![index].questionText,
+                              widget.responseId,
+                              // widget.mySurveysQuestion![index].questionText,
                               style: const TextStyle(fontSize: 18),
                               textAlign: TextAlign.center,
                             ),
@@ -211,7 +214,8 @@ class SaveResponseState extends State<SaveAnswer> {
                 onPressed: () {
                   // print(
                   //     "${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}+sda");
-                  saveAllResponses(saveProvider.saveResponse);
+                  // saveAllResponses(saveProvider.saveResponse);
+                  collectSaveQuestions();
                 },
                 // print(saveAnswer.savedMyAnswers.values.toList());
                 child: const Text("Save Button")),
