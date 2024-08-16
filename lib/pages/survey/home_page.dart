@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
     // email = jwtDecodedToken['email'];
-    responseId = "";
     getSurveyData();
     _handleRefresh();
   }
