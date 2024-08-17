@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/models/survey_model.dart';
 import 'package:survey/provider/save_provider.dart';
 import 'package:survey/services/survey_service.dart';
@@ -86,6 +87,7 @@ class _HomePageState extends State<HomePage> {
       var responseData = jsonDecode(response.body);
       setState(() {
         responseId = responseData['response']['_id'];
+        Provider.of<SaveProvider>(context, listen: false).responseId=responseId;
       });
 
       print('Response saved successfully');
