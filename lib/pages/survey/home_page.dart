@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   var isLoaded = false;
   late String surveyID;
   late DateTime beginDate;
-  late String responseId;
+   String responseId='';
   var saveProvider = SaveProvider();
   @override
   void initState() {
@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => AnswerPage(
                                       surveyId: surveys![index].id,
                                       userId: widget.id,
-                                      responseId: responseId,
+                                      // responseId: responseId,
                                     ),
                                   ),
                                 );
