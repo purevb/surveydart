@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
     // email = jwtDecodedToken['email'];
+    responseId = "";
     getSurveyData();
     _handleRefresh();
   }
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
     return await Future.delayed(const Duration(seconds: 1));
   }
 
-  void saveResponse() async {
+  Future<void> saveResponse() async {
     prefs = await SharedPreferences.getInstance();
     var reqBody = {
       "survey_id": surveyID,
@@ -76,22 +77,26 @@ class _HomePageState extends State<HomePage> {
           endDateController.text.isEmpty ? null : endDateController.text,
     };
 
-    var response = await http.post(
-      Uri.parse('http://10.0.2.2:3106/api/response'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(reqBody),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:3106/api/response'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(reqBody),
+      );
 
-    if (response.statusCode == 200) {
-      var responseData = jsonDecode(response.body);
-      setState(() {
-        responseId = responseData['response']['_id'];
-      });
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        setState(() {
+          responseId = responseData['response']['_id'];
+        });
 
-      print('Response saved successfully');
-    } else {
-      print('Failed to save Response');
-      print(response.body);
+        print('Response saved successfully');
+      } else {
+        print('Failed to save Response');
+        print(response.body);
+      }
+    } catch (e) {
+      print('Error saving response: $e');
     }
   }
 
