@@ -89,6 +89,8 @@ class _HomePageState extends State<HomePage> {
         var responseData = jsonDecode(response.body);
         setState(() {
           responseId = responseData['response']['_id'];
+          Provider.of<SaveProvider>(context, listen: false).responseId =
+              responseId;
         });
 
         print('Response saved successfully');

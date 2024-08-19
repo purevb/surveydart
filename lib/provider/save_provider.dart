@@ -21,7 +21,6 @@ class SaveProvider extends ChangeNotifier {
     if (!savedMyAnswers.containsKey(questionId)) {
       savedMyAnswers[questionId] = [];
     }
-
     for (String answer in answers) {
       if (!savedMyAnswers[questionId]!.contains(answer)) {
         savedMyAnswers[questionId]!.add(answer);
@@ -34,19 +33,19 @@ class SaveProvider extends ChangeNotifier {
     }
   }
 
-  void saveMyResponse() {
-    List<AnswerOptionModel> savedOptions = [];
+  // void saveMyResponse() {
+  //   List<AnswerOptionModel> savedOptions = [];
 
-    savedMyAnswers.forEach((questionId, answers) {
-      AnswerOptionModel aoption = AnswerOptionModel(
-        questionId: questionId,
-        responseId: responseId,
-        userId: userId,
-        userChoice: answers,
-      );
-      savedOptions.add(aoption);
-    });
-    saveResponse.addAll(savedOptions);
-    notifyListeners();
-  }
+  //   savedMyAnswers.forEach((questionId, answers) {
+  //     AnswerOptionModel aoption = AnswerOptionModel(
+  //       questionId: questionId,
+  //       responseId: responseId,
+  //       userId: userId,
+  //       userChoice: answers,
+  //     );
+  //     savedOptions.add(aoption);
+  //   });
+  //   saveResponse.addAll(savedOptions);
+  //   notifyListeners();
+  // }
 }

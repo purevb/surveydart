@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/pages/survey_answer/answer/answer_component.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -137,11 +138,12 @@ class _QuestionComponentState extends State<QuestionComponent> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          var saveProvider = SaveProvider();
                           answerTileKey.currentState?.saveCurrentAnswers();
-                          saveProvider.questionIds = widget.question!.id;
+                          Provider.of<SaveProvider>(context, listen: false)
+                              .questionIds = widget.question!.id;
                           // saveProvider.responseId = widget.responseId;
-                          saveProvider.userId = widget.userId;
+                          Provider.of<SaveProvider>(context, listen: false)
+                              .userId = widget.userId;
                           setState(() {
                             usedOnBack = true;
                             if (widget.onBack != null) {

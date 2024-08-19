@@ -38,15 +38,51 @@ class SaveResponseState extends State<SaveAnswer> {
     Provider.of<SaveProvider>(context, listen: false)
         .savedMyAnswers
         .forEach((questionId, answers) {
-      AnswerOptionModel aoption = AnswerOptionModel(
-        questionId: questionId,
-        responseId: Provider.of<SaveProvider>(context, listen: false).responseId,
-        userId: widget.userId,
-        userChoice: answers,
-      );
-      savedOptions.add(aoption);
+      if (answers.isNotEmpty) {
+        AnswerOptionModel aoption = AnswerOptionModel(
+          questionId: questionId,
+          responseId:
+              Provider.of<SaveProvider>(context, listen: false).responseId,
+          userId: widget.userId,
+          userChoice: answers,
+        );
+        savedOptions.add(aoption);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('answers cant be null')),
+        );
+      }
     });
     saveAllResponses(savedOptions);
+  }
+
+  Future<bool> updateSurvey(
+      String id, Map<String, dynamic> updatedSurvey) async {
+    var client = http.Client();
+    var uri = Uri.parse('http://localhost:3106/api/survey/$id');
+
+    try {
+      var response = await client.put(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(updatedSurvey),
+      );
+
+      if (response.statusCode == 200) {
+        print('Survey updated successfully.');
+        return true;
+      } else {
+        print('Failed to update survey. Status code: ${response.statusCode}');
+        print('Error response: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating survey: $e');
+    } finally {
+      client.close();
+    }
+    return false;
   }
 
   void saveAllResponses(List<AnswerOptionModel> answers) async {
@@ -58,28 +94,47 @@ class SaveResponseState extends State<SaveAnswer> {
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'aoption': answersJson}),
       );
-      print(response.body);
+
+      print('Post response: ${response.body}');
+
       if (response.statusCode == 200) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomePage(
-                      id: widget.userId,
-                    )));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Questions saved successfully')),
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(id: widget.userId),
+          ),
         );
+        var reqBody = {"end_date": DateTime.now().toIso8601String()};
+        var id = Provider.of<SaveProvider>(context, listen: false).responseId;
+        print('Sending PUT request to update endDate: ${reqBody['end_date']}');
+        var updateResponse = await http.put(
+          Uri.parse('http://10.0.2.2:3106/api/updateResponse/$id'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(reqBody),
+        );
+        if (updateResponse.statusCode == 200) {
+          print('EndDate updated successfully.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content:
+                    Text('Answers saved and endDate updated successfully')),
+          );
+        } else {
+          print('Failed to update EndDate: ${updateResponse.statusCode}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to update endDate')),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save questions')),
+          const SnackBar(content: Text('Failed to save answers')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Error occurred while posting questions s')),
+        const SnackBar(content: Text('Error occurred while saving answers')),
       );
-      print(e);
+      print('Error: $e');
     }
   }
 
@@ -194,7 +249,8 @@ class SaveResponseState extends State<SaveAnswer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              Provider.of<SaveProvider>(context, listen: false).responseId,
+                              Provider.of<SaveProvider>(context, listen: false)
+                                  .responseId,
                               // widget.mySurveysQuestion![index].questionText,
                               style: const TextStyle(fontSize: 18),
                               textAlign: TextAlign.center,
