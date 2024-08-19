@@ -12,11 +12,11 @@ import 'package:http/http.dart' as http;
 class SaveAnswer extends StatefulWidget {
   List<Question>? mySurveysQuestion = [];
   final String surveyId;
-  final String responseId;
+  // final String responseId;
   final String userId;
   SaveAnswer(
       {required this.surveyId,
-      required this.responseId,
+      // required this.responseId,
       required this.userId,
       required this.mySurveysQuestion,
       super.key});
@@ -40,7 +40,7 @@ class SaveResponseState extends State<SaveAnswer> {
         .forEach((questionId, answers) {
       AnswerOptionModel aoption = AnswerOptionModel(
         questionId: questionId,
-        responseId: widget.responseId,
+        responseId: Provider.of<SaveProvider>(context, listen: false).responseId,
         userId: widget.userId,
         userChoice: answers,
       );
@@ -77,7 +77,7 @@ class SaveResponseState extends State<SaveAnswer> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Error occurred while posting questions ')),
+            content: Text('Error occurred while posting questions s')),
       );
       print(e);
     }
@@ -194,7 +194,7 @@ class SaveResponseState extends State<SaveAnswer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.responseId,
+                              Provider.of<SaveProvider>(context, listen: false).responseId,
                               // widget.mySurveysQuestion![index].questionText,
                               style: const TextStyle(fontSize: 18),
                               textAlign: TextAlign.center,

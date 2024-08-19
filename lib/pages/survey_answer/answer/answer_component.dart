@@ -5,7 +5,7 @@ import 'package:survey/provider/save_provider.dart';
 
 class AnswerTile extends StatefulWidget {
   final String questionId;
-  final String responseId;
+  // final String responseId;
   final String userId;
   final List<Answer> answer;
   final String typeId;
@@ -20,7 +20,7 @@ class AnswerTile extends StatefulWidget {
     required this.answer,
     required this.typeId,
     required this.questionId,
-    required this.responseId,
+    // required this.responseId,
     required this.userId,
     super.key,
   });

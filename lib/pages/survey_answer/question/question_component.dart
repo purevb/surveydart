@@ -6,7 +6,7 @@ import 'package:survey/provider/save_provider.dart';
 
 class QuestionComponent extends StatefulWidget {
   final String surveyId;
-  final String responseId;
+  // final String responseId;
   final String userId;
   final Question? question;
   final VoidCallback? onNext;
@@ -21,7 +21,7 @@ class QuestionComponent extends StatefulWidget {
     this.index,
     this.allIndex,
     required this.surveyId,
-    required this.responseId,
+    // required this.responseId,
     required this.userId,
   });
 
@@ -123,7 +123,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                           onNext: usedOnNext,
                           typeId: widget.question!.questionTypeId,
                           questionId: widget.question!.id,
-                          responseId: widget.responseId,
+                          // responseId: widget.responseId,
                           userId: widget.userId,
                           answer: widget.question!.answerText
                               .map((e) => e)
@@ -140,7 +140,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                           var saveProvider = SaveProvider();
                           answerTileKey.currentState?.saveCurrentAnswers();
                           saveProvider.questionIds = widget.question!.id;
-                          saveProvider.responseId = widget.responseId;
+                          // saveProvider.responseId = widget.responseId;
                           saveProvider.userId = widget.userId;
                           setState(() {
                             usedOnBack = true;

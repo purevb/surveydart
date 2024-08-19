@@ -13,12 +13,12 @@ import 'package:survey/services/survey_service.dart';
 
 class AnswerPage extends StatefulWidget {
   final String surveyId;
-  final String responseId;
+  // final String responseId;
   final String userId;
   const AnswerPage(
       {super.key,
       required this.surveyId,
-      required this.responseId,
+      // required this.responseId,
       required this.userId});
 
   @override
@@ -105,7 +105,7 @@ class _AnswerPageState extends State<AnswerPage> {
             mySurveysQuestion: mySurveysQuestion,
             surveyId: widget.surveyId,
             userId: widget.userId,
-            responseId: widget.responseId,
+            // responseId: widget.responseId,
           ),
         ),
       );
@@ -217,7 +217,7 @@ class _AnswerPageState extends State<AnswerPage> {
                   QuestionComponent(
                       question: mySurveysQuestion![questionIndex],
                       surveyId: widget.surveyId,
-                      responseId: widget.responseId,
+                      // responseId: widget.responseId,
                       userId: widget.userId,
                       onNext: nextQuestion,
                       onBack: previousQuestion,

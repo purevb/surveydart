@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/models/survey_model.dart';
 import 'package:survey/provider/save_provider.dart';
 import 'package:survey/services/survey_service.dart';
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   var isLoaded = false;
   late String surveyID;
   late DateTime beginDate;
-  late String responseId;
+  String responseId = '';
   var saveProvider = SaveProvider();
   @override
   void initState() {
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       );
 
       if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
+        var responseData = jsonDecode(response.body);
         setState(() {
           responseId = responseData['response']['_id'];
         });
@@ -224,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => AnswerPage(
                                       surveyId: surveys![index].id,
                                       userId: widget.id,
-                                      responseId: responseId,
+                                      // responseId: responseId,
                                     ),
                                   ),
                                 );
