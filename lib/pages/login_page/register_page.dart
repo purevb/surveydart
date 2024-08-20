@@ -16,7 +16,7 @@ class RegisterPageState extends State<RegisterPage> {
   bool _isNotValidate = false;
   String _responseMessage = '';
 
-  void postQuestion() async {
+  Future<void> postQuestion() async {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       var regBody = {
         "email": emailController.text,

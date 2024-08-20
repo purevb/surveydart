@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     prefs = await SharedPreferences.getInstance();
   }
 
-  void signUserIn() async {
+  Future<void> signUserIn() async {
     if (emailController.text.isNotEmpty && passWordController.text.isNotEmpty) {
       var reqBody = {
         "email": emailController.text,
@@ -77,7 +77,10 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 50),
+                  const SizedBox(
+                    height: 50,
+                    // child: RiveAnimation.asset("assets/anime.riv"),
+                  ),
                   const Icon(Icons.lock, size: 100),
                   const SizedBox(height: 50),
                   Text(

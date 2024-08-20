@@ -29,7 +29,7 @@ class SaveResponseState extends State<SaveAnswer> {
   late String email;
   String? name;
 
-  var saveProvider = SaveProvider();
+  // var saveProvider = SaveProvider();
 
   void collectSaveQuestions() {
     // saveProvider.saveMyResponse();
@@ -40,6 +40,7 @@ class SaveResponseState extends State<SaveAnswer> {
         .forEach((questionId, answers) {
       if (answers.isNotEmpty) {
         AnswerOptionModel aoption = AnswerOptionModel(
+          surveyId: Provider.of<SaveProvider>(context, listen: false).surveyId,
           questionId: questionId,
           responseId:
               Provider.of<SaveProvider>(context, listen: false).responseId,
@@ -85,7 +86,7 @@ class SaveResponseState extends State<SaveAnswer> {
     return false;
   }
 
-  void saveAllResponses(List<AnswerOptionModel> answers) async {
+  Future<void> saveAllResponses(List<AnswerOptionModel> answers) async {
     final url = Uri.parse('http://10.0.2.2:3106/api/aoptionses');
     try {
       final answersJson = answers.map((r) => r.toJson()).toList();

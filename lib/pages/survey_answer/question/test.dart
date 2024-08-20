@@ -30,7 +30,7 @@ class _AnswerPageState extends State<AnswerPage> {
   List<Survey>? surveys;
   List<QuestionModel>? questions;
   var isLoaded = false;
-  var dataProvider = QuestionProvider();
+  // var dataProvider = QuestionProvider();
   AllSurvey? myAllSurvey;
   List<Question>? mySurveysQuestion = [];
   int questionIndex = 0;
@@ -55,9 +55,9 @@ class _AnswerPageState extends State<AnswerPage> {
           questions!.isNotEmpty) {
         setState(() {
           isLoaded = true;
-          dataProvider.addSurvey(surveys!);
-          dataProvider.addQuestion(questions!);
-          dataProvider.addAllSurvey(allSurvey!);
+          // dataProvider.addSurvey(surveys!);
+          // dataProvider.addQuestion(questions!);
+          // dataProvider.addAllSurvey(allSurvey!);
         });
         checkSurvey();
       } else {
@@ -69,21 +69,21 @@ class _AnswerPageState extends State<AnswerPage> {
   }
 
   void checkSurvey() {
-    if (dataProvider.allSurvey != null && dataProvider.allSurvey!.isNotEmpty) {
-      for (var providerSurvey in dataProvider.allSurvey!) {
-        if (widget.surveyId == providerSurvey.id) {
+    if (allSurvey != null && allSurvey!.isNotEmpty) {
+      for (var surveyId in allSurvey!) {
+        if (widget.surveyId == surveyId.id) {
           setState(() {
-            myAllSurvey = providerSurvey;
+            myAllSurvey = surveyId;
           });
           extractSurvey(myAllSurvey!);
-          print(providerSurvey);
+          print(surveyId);
         }
       }
     }
   }
 
   void extractSurvey(AllSurvey myAllSurvey) {
-    if (dataProvider.allSurvey != null && dataProvider.allSurvey!.isNotEmpty) {
+    if (allSurvey != null && allSurvey!.isNotEmpty) {
       setState(() {
         mySurveysQuestion!.addAll(myAllSurvey.question);
       });

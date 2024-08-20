@@ -8,6 +8,7 @@ class SaveProvider extends ChangeNotifier {
   List<AnswerOptionModel> saveResponse = [];
   String questionIds = "";
   String userId = "";
+  String surveyId = "";
   String responseId = "";
 
   void addSurvey(List<Survey> surveys) {

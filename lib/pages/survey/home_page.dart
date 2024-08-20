@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+// import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:survey/models/survey_model.dart';
@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomePage extends StatefulWidget {
   // String? token;
   final String id;
-  HomePage(
+  const HomePage(
       {
       // this.token,
       required this.id,
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       if (surveys != null && surveys!.isNotEmpty) {
         setState(() {
           isLoaded = true;
-          saveProvider.addSurvey(surveys!);
+          // saveProvider.addSurvey(surveys!);
         });
       } else {
         print('No surveys found.');
@@ -221,13 +221,16 @@ class _HomePageState extends State<HomePage> {
                                   beginDate = DateTime.now();
                                 });
                                 saveResponse();
+                                Provider.of<SaveProvider>(context,
+                                        listen: false)
+                                    .surveyId = surveys![index].id;
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => AnswerPage(
                                       surveyId: surveys![index].id,
                                       userId: widget.id,
-                                      // responseId: responseId,
                                     ),
                                   ),
                                 );

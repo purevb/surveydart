@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/pages/survey_answer/answer/answer_component.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:survey/provider/save_provider.dart';
+// import 'package:survey/provider/save_provider.dart';
 
 class QuestionComponent extends StatefulWidget {
   final String surveyId;
@@ -139,11 +139,11 @@ class _QuestionComponentState extends State<QuestionComponent> {
                       GestureDetector(
                         onTap: () {
                           answerTileKey.currentState?.saveCurrentAnswers();
-                          Provider.of<SaveProvider>(context, listen: false)
-                              .questionIds = widget.question!.id;
-                          // saveProvider.responseId = widget.responseId;
-                          Provider.of<SaveProvider>(context, listen: false)
-                              .userId = widget.userId;
+                          // Provider.of<SaveProvider>(context, listen: false)
+                          //     .questionIds = widget.question!.id;
+                          // // saveProvider.responseId = widget.responseId;
+                          // Provider.of<SaveProvider>(context, listen: false)
+                          //     .userId = widget.userId;
                           setState(() {
                             usedOnBack = true;
                             if (widget.onBack != null) {

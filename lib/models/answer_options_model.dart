@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 class AnswerOptionModel {
+  final String surveyId;
   final String questionId;
   final String responseId;
   final List<String> userChoice;
   final String userId;
 
   AnswerOptionModel({
+    required this.surveyId,
     required this.questionId,
     required this.responseId,
     required this.userChoice,
@@ -15,6 +17,7 @@ class AnswerOptionModel {
 
   factory AnswerOptionModel.fromJson(Map<String, dynamic> json) {
     return AnswerOptionModel(
+      surveyId: json['survey_id'],
       questionId: json['question_id'],
       responseId: json['response_id'],
       userChoice: List<String>.from(json['user_choice']),
@@ -24,6 +27,7 @@ class AnswerOptionModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'survey_id': surveyId,
       'question_id': questionId,
       'response_id': responseId,
       'user_choice': userChoice,
