@@ -55,9 +55,6 @@ class _AnswerPageState extends State<AnswerPage> {
           questions!.isNotEmpty) {
         setState(() {
           isLoaded = true;
-          // dataProvider.addSurvey(surveys!);
-          // dataProvider.addQuestion(questions!);
-          // dataProvider.addAllSurvey(allSurvey!);
         });
         checkSurvey();
       } else {
