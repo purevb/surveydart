@@ -57,35 +57,6 @@ class SaveResponseState extends State<SaveAnswer> {
     saveAllResponses(savedOptions);
   }
 
-  Future<bool> updateSurvey(
-      String id, Map<String, dynamic> updatedSurvey) async {
-    var client = http.Client();
-    var uri = Uri.parse('http://localhost:3106/api/survey/$id');
-
-    try {
-      var response = await client.put(
-        uri,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(updatedSurvey),
-      );
-
-      if (response.statusCode == 200) {
-        print('Survey updated successfully.');
-        return true;
-      } else {
-        print('Failed to update survey. Status code: ${response.statusCode}');
-        print('Error response: ${response.body}');
-      }
-    } catch (e) {
-      print('Error updating survey: $e');
-    } finally {
-      client.close();
-    }
-    return false;
-  }
-
   Future<void> saveAllResponses(List<AnswerOptionModel> answers) async {
     final url = Uri.parse('http://10.0.2.2:3106/api/aoptionses');
     try {
@@ -273,6 +244,7 @@ class SaveResponseState extends State<SaveAnswer> {
                   //     "${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}+sda");
                   // saveAllResponses(saveProvider.saveResponse);
                   collectSaveQuestions();
+                  Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.clear();
                 },
                 // print(saveAnswer.savedMyAnswers.values.toList());
                 child: const Text("Save Button")),

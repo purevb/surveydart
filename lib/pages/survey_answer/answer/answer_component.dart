@@ -55,22 +55,21 @@ class AnswerTileState extends State<AnswerTile> {
     } else if (widget.typeId.contains("669763b497492aac645169c1")) {
       List<String> selectedAnswers = [];
       for (int i = 0; i < widget.answer.length; i++) {
-        if (isChecked[widget.index]![i] == true &&
-            (widget.onBack == true || widget.onNext == true)) {
+        if (isChecked[widget.index]![i] == true) {
           selectedAnswers.add(widget.answer[i].id);
         }
       }
       Provider.of<SaveProvider>(context, listen: false)
           .saveAnswers(widget.questionId, selectedAnswers);
     } else {
-      if (selectedAnswer[widget.index] != null &&
-          (widget.onBack == true || widget.onNext == true)) {
+      if (selectedAnswer[widget.index] != null) {
         Provider.of<SaveProvider>(context, listen: false).saveAnswers(
             widget.questionId,
             [widget.answer[selectedAnswer[widget.index]!].id]);
       }
     }
-    print(saveAnswer.savedMyAnswers.values.toList());
+    print(
+        '${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}}');
   }
 
   @override
@@ -105,7 +104,8 @@ class AnswerTileState extends State<AnswerTile> {
                       },
                       onSubmitted: (value) {
                         setState(() {
-                          saveAnswer.saveAnswers(widget.questionId, [text]);
+                          text = value;
+                          // saveAnswer.saveAnswers(widget.questionId, [text]);
                         });
                       },
                     ),

@@ -138,16 +138,12 @@ class _QuestionComponentState extends State<QuestionComponent> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          answerTileKey.currentState?.saveCurrentAnswers();
-                          // Provider.of<SaveProvider>(context, listen: false)
-                          //     .questionIds = widget.question!.id;
-                          // // saveProvider.responseId = widget.responseId;
-                          // Provider.of<SaveProvider>(context, listen: false)
-                          //     .userId = widget.userId;
                           setState(() {
-                            usedOnBack = true;
                             if (widget.onBack != null) {
                               widget.onBack!();
+                              usedOnBack = true;
+                               answerTileKey.currentState?.saveCurrentAnswers();
+
                             }
                           });
                         },
@@ -168,7 +164,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                               Icon(Icons.keyboard_double_arrow_left_sharp),
                               Text(
                                 "Back",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 15),
                               )
                             ],
                           ),
@@ -197,7 +193,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                               Text("${widget.index! + 1}/${widget.allIndex}"),
                               const Text(
                                 "Questions",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(fontSize: 15),
                               )
                             ],
                           ),
@@ -227,7 +223,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                               Text(
                                 "Audience",
                                 style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.w100,
                                     color: Colors.black),
                               ),
@@ -237,11 +233,12 @@ class _QuestionComponentState extends State<QuestionComponent> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          answerTileKey.currentState?.saveCurrentAnswers();
                           setState(() {
-                            usedOnNext = true;
                             if (widget.onNext != null) {
                               widget.onNext!();
+                              usedOnNext = true;
+                          answerTileKey.currentState?.saveCurrentAnswers();
+
                             }
                           });
                         },
@@ -265,7 +262,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                               Text(
                                 "Next",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                 ),
                               )
                             ],

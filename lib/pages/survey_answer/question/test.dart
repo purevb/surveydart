@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/models/question_model.dart';
 import 'package:survey/models/survey_model.dart';
 import 'package:survey/pages/survey_answer/question/question_component.dart';
 import 'package:survey/pages/survey_answer/question/save_answer.dart';
-import 'package:survey/provider/question_provider.dart';
+import 'package:survey/provider/save_provider.dart';
 import 'package:survey/services/all_surveys_service.dart';
 import 'package:survey/services/question_service.dart';
 import 'package:survey/services/survey_service.dart';
@@ -225,6 +226,10 @@ class _AnswerPageState extends State<AnswerPage> {
                     left: 0,
                     child: IconButton(
                       onPressed: () {
+                        Provider.of<SaveProvider>(context, listen: false)
+                            .savedMyAnswers
+                            .clear();
+
                         Navigator.pop(context);
                       },
                       icon: const Icon(
