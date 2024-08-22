@@ -34,8 +34,7 @@ class AnswerTileState extends State<AnswerTile> {
   late Map<int, Map<int, bool>> isChecked;
   var saveAnswer = SaveProvider();
   late Map<int, int?> selectedAnswer;
-  late String text;
-
+  late String text = "";
   @override
   void initState() {
     super.initState();
@@ -44,13 +43,14 @@ class AnswerTileState extends State<AnswerTile> {
       for (int i = 0; i < widget.answer.length; i++)
         i: {for (int j = 0; j < widget.answer.length; j++) j: false}
     };
+    text = "";
   }
 
   void saveCurrentAnswers() {
     if (widget.typeId.contains("66b19afb79959b160726b2c4")) {
       if (widget.onBack == true || widget.onNext == true) {
         Provider.of<SaveProvider>(context, listen: false)
-            .saveAnswers(widget.questionId, [text]);
+            .saveAnswers(widget.questionId, [textFieldController.text]);
       }
     } else if (widget.typeId.contains("669763b497492aac645169c1")) {
       List<String> selectedAnswers = [];
@@ -69,7 +69,7 @@ class AnswerTileState extends State<AnswerTile> {
       }
     }
     print(
-        '${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}}');
+        '${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}');
   }
 
   @override
@@ -104,7 +104,8 @@ class AnswerTileState extends State<AnswerTile> {
                       },
                       onSubmitted: (value) {
                         setState(() {
-                          text = value;
+                          Provider.of<SaveProvider>(context, listen: false)
+                              .saveAnswers(widget.questionId, [text]);
                           // saveAnswer.saveAnswers(widget.questionId, [text]);
                         });
                       },

@@ -142,8 +142,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                             if (widget.onBack != null) {
                               widget.onBack!();
                               usedOnBack = true;
-                               answerTileKey.currentState?.saveCurrentAnswers();
-
+                              answerTileKey.currentState?.saveCurrentAnswers();
                             }
                           });
                         },
@@ -237,8 +236,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                             if (widget.onNext != null) {
                               widget.onNext!();
                               usedOnNext = true;
-                          answerTileKey.currentState?.saveCurrentAnswers();
-
+                              answerTileKey.currentState?.saveCurrentAnswers();
                             }
                           });
                         },

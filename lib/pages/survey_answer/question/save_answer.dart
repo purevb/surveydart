@@ -9,6 +9,7 @@ import 'package:survey/pages/survey/home_page.dart';
 import 'package:survey/provider/save_provider.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class SaveAnswer extends StatefulWidget {
   List<Question>? mySurveysQuestion = [];
   final String surveyId;
@@ -244,7 +245,9 @@ class SaveResponseState extends State<SaveAnswer> {
                   //     "${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}+sda");
                   // saveAllResponses(saveProvider.saveResponse);
                   collectSaveQuestions();
-                  Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.clear();
+                  Provider.of<SaveProvider>(context, listen: false)
+                      .savedMyAnswers
+                      .clear();
                 },
                 // print(saveAnswer.savedMyAnswers.values.toList());
                 child: const Text("Save Button")),
