@@ -238,6 +238,19 @@ class _HomePageState extends State<HomePage> {
                                 // saveProvider.responseId = responseId;
                               },
                               child: Container(
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.1),
+                                        offset: const Offset(0, 2),
+                                        blurRadius: 4.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.1))),
                                 padding: const EdgeInsets.all(25),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
