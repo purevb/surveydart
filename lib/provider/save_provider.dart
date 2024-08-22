@@ -22,11 +22,10 @@ class SaveProvider extends ChangeNotifier {
     if (!savedMyAnswers.containsKey(questionId)) {
       savedMyAnswers[questionId] = [];
     }
+    savedMyAnswers[questionId]!.clear();
     for (String answer in answers) {
-      if (!savedMyAnswers[questionId]!.contains(answer)) {
-        savedMyAnswers[questionId]!.add(answer);
-        hasNewAnswer = true;
-      }
+      savedMyAnswers[questionId]!.add(answer);
+      hasNewAnswer = true;
     }
 
     if (hasNewAnswer) {
