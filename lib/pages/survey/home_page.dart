@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 // import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:survey/models/survey_model.dart';
 import 'package:survey/provider/save_provider.dart';
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
     return LiquidPullToRefresh(
       key: _refreshKey,
       onRefresh: _handleRefresh,
-      color: Color(0xff121212),
+      color: const Color(0xff121212),
       backgroundColor: Colors.white,
       animSpeedFactor: 3,
       showChildOpacityTransition: false,
@@ -280,7 +280,7 @@ class _HomePageState extends State<HomePage> {
                                 // saveProvider.responseId = responseId;
                               },
                               child: Container(
-                                margin: EdgeInsets.all(10),
+                                margin: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -323,11 +323,11 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 height: double.infinity,
                 color: const Color(0xff121212),
-                child: const Center(
+                child: Center(
                   child: SizedBox(
-                    child: CircularProgressIndicator(
-                      color: Color(0xffb3b3b3),
-                    ),
+                    child: SizedBox(
+                        child: Lottie.asset("assets/refresher.json",
+                            width: 100, height: 100)),
                   ),
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 // import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:lottie/lottie.dart';
@@ -156,7 +155,7 @@ class _HomePageState extends State<NewHomePage> {
                     alignment: Alignment.topCenter,
                     children: [
                       Container(
-                        height: height * 1.3,
+                        height: height * 1.15,
                         color: const Color(0xff121212),
                       ),
                       Positioned(
@@ -658,12 +657,10 @@ class _HomePageState extends State<NewHomePage> {
                   width: double.infinity,
                   height: double.infinity,
                   color: const Color(0xff121212),
-                  child: const Center(
+                  child: Center(
                     child: SizedBox(
-                      child: CircularProgressIndicator(
-                        color: Color(0xffb3b3b3),
-                      ),
-                    ),
+                        child: Lottie.asset("assets/refresher.json",
+                            width: 100, height: 100)),
                   ),
                 ),
         ),

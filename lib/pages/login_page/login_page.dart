@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey/pages/login_page/components/square_tile.dart';
 import 'package:survey/pages/login_page/register_page.dart';
-import 'package:survey/pages/survey/home_page.dart';
 import 'package:survey/pages/survey/new_home_page.dart';
 
 class LoginPage extends StatefulWidget {

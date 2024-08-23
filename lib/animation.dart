@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:survey/pages/survey/home_page.dart';
 import 'package:survey/pages/survey/new_home_page.dart';
 
+// ignore: must_be_immutable
 class AnimationPage extends StatefulWidget {
   String id;
   AnimationPage({super.key, required this.id});

@@ -90,13 +90,14 @@ class AnswerTileState extends State<AnswerTile> {
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     child: TextField(
                       controller: textFieldController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
-                        hintMaxLines: 5,
-                        helperMaxLines: 5,
-                        contentPadding: EdgeInsets.symmetric(vertical: 80),
-                        border: OutlineInputBorder(),
-                        labelText: 'Your Opinion',
-                      ),
+                          hintMaxLines: 5,
+                          helperMaxLines: 5,
+                          contentPadding: EdgeInsets.symmetric(vertical: 80),
+                          border: OutlineInputBorder(),
+                          labelText: 'Your Opinion',
+                          labelStyle: TextStyle(color: Color(0xffb3b3b3))),
                       onChanged: (value) {
                         setState(() {
                           text = value;

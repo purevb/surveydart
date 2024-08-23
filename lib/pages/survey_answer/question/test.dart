@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/models/question_model.dart';
@@ -288,11 +288,11 @@ class _AnswerPageState extends State<AnswerPage> {
                 width: double.infinity,
                 height: double.infinity,
                 color: const Color(0xff121212),
-                child: const Center(
+                child: Center(
                   child: SizedBox(
-                    child: CircularProgressIndicator(
-                      color: Color(0xffb3b3b3),
-                    ),
+                    child: SizedBox(
+                        child: Lottie.asset("assets/refresher.json",
+                            width: 100, height: 100)),
                   ),
                 ),
               ),
