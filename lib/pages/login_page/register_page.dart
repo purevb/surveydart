@@ -70,10 +70,14 @@ class RegisterPageState extends State<RegisterPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: const Color(0xff121212),
         appBar: AppBar(
-          backgroundColor: Colors.grey[300],
-          title: const Text('Register'),
+          foregroundColor: const Color(0xffb3b3b3),
+          backgroundColor: const Color(0xff121212),
+          title: const Text(
+            'Register',
+            style: TextStyle(color: Color(0xffb3b3b3)),
+          ),
           centerTitle: true,
         ),
         body: Padding(
@@ -84,13 +88,13 @@ class RegisterPageState extends State<RegisterPage> {
             children: [
               const Text(
                 'Register',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24, color: Color(0xffb3b3b3)),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  errorText: _isNotValidate ? "Enter a question" : null,
+                  errorText: _isNotValidate ? "Enter a E-mail" : null,
                   enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),

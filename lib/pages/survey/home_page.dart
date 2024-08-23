@@ -103,104 +103,146 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    int currentIndex = 0;
     return LiquidPullToRefresh(
       key: _refreshKey,
       onRefresh: _handleRefresh,
-      color: Colors.deepPurple,
-      backgroundColor: Colors.purple[100],
+      color: Color(0xff121212),
+      backgroundColor: Colors.white,
       animSpeedFactor: 3,
       showChildOpacityTransition: false,
       height: 100,
       child: Scaffold(
-        bottomNavigationBar: GNav(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          backgroundColor: const Color.fromARGB(255, 184, 169, 236),
-          tabBackgroundColor: Colors.black.withOpacity(0.2),
-          padding: const EdgeInsets.all(15),
-          tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
-          selectedIndex: currentIndex,
-          onTabChange: (index) {
+        appBar: AppBar(
+          backgroundColor: const Color(0xff121212),
+          foregroundColor: const Color(0xffb3b3b3),
+          title: const Text(
+            "AllSurveys",
+            style: TextStyle(color: Color(0xffb3b3b3)),
+          ),
+          centerTitle: true,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          // unselectedIconCol: ,
+          unselectedItemColor: const Color(0xffb3b3b3),
+          onTap: (index) {
             setState(() {
               currentIndex = index;
             });
           },
-          gap: 0,
-          tabs: const [
-            GButton(
-              icon: Icons.home,
-              text: 'Home',
-            ),
-            GButton(
-              icon: Icons.favorite,
-              text: 'Likes',
-            ),
-            GButton(
-              icon: Icons.search_sharp,
-              text: 'Search',
-            ),
-            GButton(
-              icon: Icons.settings,
-              text: 'Settings',
-            ),
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+                backgroundColor: Color(0xff121212)),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.music_note),
+                label: 'Music',
+                backgroundColor: Color(0xffb3b3b3)),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.newspaper),
+                label: 'News',
+                backgroundColor: Color(0xffb3b3b3)),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings_sharp),
+                label: 'Settings',
+                backgroundColor: Color(0xffb3b3b3)),
           ],
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // backgroundColor: const Color(0xff121212),
+          // tabBackgroundColor: const Color(0xffb3b3b3),
+          // padding: const EdgeInsets.all(15),
+          // tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
+          // selectedIndex: currentIndex,
+          // onTabChange: (index) {
+          //   setState(() {
+          //     currentIndex = index;
+          //   });
+          // },
+          // gap: 0,
+          // tabs: const [
+          //   GButton(
+          //     icon: Icons.home,
+          //     text: 'Home',
+          //     iconColor: Color(0xffb3b3b3),
+          //   ),
+          //   GButton(
+          //     icon: Icons.favorite,
+          //     text: 'Likes',
+          //     iconColor: Color(0xffb3b3b3),
+          //   ),
+          //   GButton(
+          //     icon: Icons.search_sharp,
+          //     text: 'Search',
+          //     iconColor: Color(0xffb3b3b3),
+          //   ),
+          //   GButton(
+          //     icon: Icons.settings,
+          //     text: 'Settings',
+          //     iconColor: Color(0xffb3b3b3),
+          //   ),
+          // ],
         ),
         body: isLoaded
             ? Stack(
                 alignment: Alignment.topCenter,
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color.fromARGB(255, 187, 178, 202),
-                          Color(0xffe7e2fe),
-                        ],
-                      ),
-                    ),
+                    color: const Color(0xff121212),
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color.fromARGB(255, 57, 16, 122),
-                          Color.fromARGB(255, 183, 170, 241),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   decoration: const BoxDecoration(
+                  //     gradient: LinearGradient(
+                  //       begin: Alignment.topCenter,
+                  //       end: Alignment.bottomCenter,
+                  //       colors: [
+                  //         Color.fromARGB(255, 187, 178, 202),
+                  //         Color(0xffe7e2fe),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   decoration: const BoxDecoration(
+                  //     shape: BoxShape.rectangle,
+                  //     gradient: LinearGradient(
+                  //       begin: Alignment.topCenter,
+                  //       end: Alignment.bottomCenter,
+                  //       colors: [
+                  //         Color.fromARGB(255, 57, 16, 122),
+                  //         Color.fromARGB(255, 183, 170, 241),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   top: -80,
+                  //   child: Container(
+                  //     height: 200,
+                  //     width: 200,
+                  //     decoration: const BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       gradient: LinearGradient(
+                  //         begin: Alignment.center,
+                  //         end: AlignmentDirectional.bottomCenter,
+                  //         colors: [
+                  //           Color.fromARGB(255, 57, 16, 122),
+                  //           Color.fromARGB(255, 218, 196, 243),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Positioned(
-                    top: -80,
-                    child: Container(
-                      height: 200,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.center,
-                          end: AlignmentDirectional.bottomCenter,
-                          colors: [
-                            Color.fromARGB(255, 57, 16, 122),
-                            Color.fromARGB(255, 218, 196, 243),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: height * 0.18,
+                    top: height * 0.01,
                     child: SizedBox(
                       width: width,
-                      height: height * 0.7,
+                      height: height * 0.75,
                       child: GridView.builder(
                         padding: EdgeInsets.zero,
                         physics: const ClampingScrollPhysics(),
@@ -208,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 1 / 1,
+                          childAspectRatio: 1 / 1.1,
                         ),
                         itemCount: surveys!.length,
                         itemBuilder: (context, index) {
@@ -275,39 +317,19 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: width * 0.04,
-                    top: height * 0.04,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: width * 0.04,
-                    top: height * 0.04,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: height * 0.14,
-                    child: const Text(
-                      "All Surveys",
-                      style: TextStyle(fontSize: 24, fontFamily: 'Roboto'),
-                    ),
-                  ),
                 ],
               )
-            : const Center(
-                child: CircularProgressIndicator(),
+            : Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: const Color(0xff121212),
+                child: const Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(
+                      color: Color(0xffb3b3b3),
+                    ),
+                  ),
+                ),
               ),
       ),
     );

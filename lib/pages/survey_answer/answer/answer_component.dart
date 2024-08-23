@@ -122,9 +122,9 @@ class AnswerTileState extends State<AnswerTile> {
                       title: Text(
                         widget.answer[index].answerText,
                         style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Roboto',
-                        ),
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Roboto',
+                            color: Color(0xffb3b3b3)),
                       ),
                       leading: Checkbox(
                         value: isChecked[widget.index]?[index],
@@ -152,12 +152,13 @@ class AnswerTileState extends State<AnswerTile> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: RadioListTile<int>(
+                      tileColor: Colors.white,
                       title: Text(
                         widget.answer[index].answerText,
                         style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Roboto',
-                        ),
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Roboto',
+                            color: Color(0xffb3b3b3)),
                       ),
                       value: index,
                       groupValue: selectedAnswer[widget.index],

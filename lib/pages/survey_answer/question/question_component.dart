@@ -50,8 +50,8 @@ class _QuestionComponentState extends State<QuestionComponent> {
             width: width * 0.9,
             height: height * 0.85,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white.withOpacity(0.15),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -64,9 +64,9 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         alignment: Alignment.center,
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              'https://img.freepik.com/free-vector/abstract-business-professional-background-banner-design-multipurpose_1340-16863.jpg',
+                              'https://images.unsplash.com/photo-1595418917831-ef942bd9f9ec?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                               height: height * 0.25,
                               width: width * 0.85,
                               fit: BoxFit.cover,
@@ -99,16 +99,16 @@ class _QuestionComponentState extends State<QuestionComponent> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Color.fromARGB(255, 138, 112, 233),
-                            Colors.deepOrange
+                            Color.fromARGB(255, 16, 207, 32),
+                            Color.fromARGB(255, 16, 207, 32)
                           ],
                         ),
                         unselectedGradientColor: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Color.fromARGB(255, 189, 174, 174),
-                            Colors.blue
+                            Color.fromARGB(255, 106, 167, 148),
+                            Color.fromARGB(255, 3, 0, 12)
                           ],
                         ),
                       ),
@@ -148,16 +148,10 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         },
                         child: Container(
                           width: width * 0.2,
-                          height: height * 0.06,
+                          height: height * 0.05,
                           decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xffEEE4B1),
-                                    Color(0xffC8ACD6)
-                                  ]),
-                              borderRadius: BorderRadius.circular(16)),
+                              color: const Color(0xff1db954),
+                              borderRadius: BorderRadius.circular(5)),
                           child: const Column(
                             children: [
                               Icon(Icons.keyboard_double_arrow_left_sharp),
@@ -175,16 +169,10 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         },
                         child: Container(
                           width: width * 0.2,
-                          height: height * 0.06,
+                          height: height * 0.05,
                           decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xffEEE4B1),
-                                    Color(0xffC8ACD6)
-                                  ]),
-                              borderRadius: BorderRadius.circular(16)),
+                              color: const Color(0xff1db954),
+                              borderRadius: BorderRadius.circular(5)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,16 +192,10 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         },
                         child: Container(
                           width: width * 0.2,
-                          height: height * 0.06,
+                          height: height * 0.05,
                           decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xffEEE4B1),
-                                    Color(0xffC8ACD6)
-                                  ]),
-                              borderRadius: BorderRadius.circular(16)),
+                              color: const Color(0xff1db954),
+                              borderRadius: BorderRadius.circular(5)),
                           child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,16 +224,10 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         },
                         child: Container(
                           width: width * 0.2,
-                          height: height * 0.06,
+                          height: height * 0.05,
                           decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xffEEE4B1),
-                                    Color(0xffC8ACD6)
-                                  ]),
-                              borderRadius: BorderRadius.circular(16)),
+                              color: const Color(0xff1db954),
+                              borderRadius: BorderRadius.circular(5)),
                           child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,

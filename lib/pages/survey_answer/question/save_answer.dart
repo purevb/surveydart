@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:survey/animation.dart';
 import 'package:survey/models/all_survey_model.dart';
 import 'package:survey/models/answer_options_model.dart';
 import 'package:survey/pages/survey/home_page.dart';
@@ -72,11 +73,15 @@ class SaveResponseState extends State<SaveAnswer> {
 
       if (response.statusCode == 200) {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(id: widget.userId),
-          ),
-        );
+            context,
+            MaterialPageRoute(
+                builder: (context) => AnimationPage(id: widget.userId)));
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => HomePage(id: widget.userId),
+        //   ),
+        // );
         var reqBody = {"end_date": DateTime.now().toIso8601String()};
         var id = Provider.of<SaveProvider>(context, listen: false).responseId;
         print('Sending PUT request to update endDate: ${reqBody['end_date']}');
@@ -111,81 +116,85 @@ class SaveResponseState extends State<SaveAnswer> {
     }
   }
 
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    int currentIndex = 0;
     return Scaffold(
-      bottomNavigationBar: GNav(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        backgroundColor: const Color.fromARGB(255, 184, 169, 236),
-        tabBackgroundColor: Colors.black.withOpacity(0.2),
-        padding: const EdgeInsets.all(15),
-        tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
-        selectedIndex: currentIndex,
-        gap: 0,
-        tabs: const [
-          GButton(
-            icon: Icons.home,
-            text: 'Home',
-          ),
-          GButton(
-            icon: Icons.favorite,
-            text: 'Likes',
-          ),
-          GButton(
-            icon: Icons.search_sharp,
-            text: 'Search',
-          ),
-          GButton(
-            icon: Icons.settings,
-            text: 'Settings',
-          ),
+      bottomNavigationBar: BottomNavigationBar(
+        // unselectedIconCol: ,
+        unselectedItemColor: const Color(0xffb3b3b3),
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+              backgroundColor: Color(0xff121212)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.music_note),
+              label: 'Music',
+              backgroundColor: Color(0xffb3b3b3)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper),
+              label: 'News',
+              backgroundColor: Color(0xffb3b3b3)),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings_sharp),
+              label: 'Settings',
+              backgroundColor: Color(0xffb3b3b3)),
         ],
       ),
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     gradient: LinearGradient(
+          //       begin: Alignment.topCenter,
+          //       end: Alignment.bottomCenter,
+          //       colors: [Color.fromARGB(255, 187, 178, 202), Color(0xffe7e2fe)],
+          //     ),
+          //   ),
+          // ),
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     shape: BoxShape.rectangle,
+          //     gradient: LinearGradient(
+          //       begin: Alignment.topCenter,
+          //       end: Alignment.bottomCenter,
+          //       colors: [
+          //         Color.fromARGB(255, 57, 16, 122),
+          //         Color.fromARGB(255, 183, 170, 241)
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          // Positioned(
+          //   top: -80,
+          //   child: Container(
+          //     height: 200,
+          //     width: 200,
+          //     decoration: const BoxDecoration(
+          //       shape: BoxShape.circle,
+          //       gradient: LinearGradient(
+          //         begin: Alignment.center,
+          //         end: AlignmentDirectional.bottomCenter,
+          //         colors: [
+          //           Color.fromARGB(255, 57, 16, 122),
+          //           Color.fromARGB(255, 218, 196, 243)
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color.fromARGB(255, 187, 178, 202), Color(0xffe7e2fe)],
-              ),
-            ),
-          ),
-          Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.rectangle,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(255, 57, 16, 122),
-                  Color.fromARGB(255, 183, 170, 241)
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: -80,
-            child: Container(
-              height: 200,
-              width: 200,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.center,
-                  end: AlignmentDirectional.bottomCenter,
-                  colors: [
-                    Color.fromARGB(255, 57, 16, 122),
-                    Color.fromARGB(255, 218, 196, 243)
-                  ],
-                ),
-              ),
-            ),
+            color: const Color(0xff121212),
           ),
           Positioned(
             top: height * 0.18,
@@ -216,7 +225,7 @@ class SaveResponseState extends State<SaveAnswer> {
                         //             const QuestionComponent()));
                       },
                       child: Container(
-                        color: Colors.transparent.withOpacity(0.2),
+                        color: const Color(0xffb3b3b3),
                         padding: const EdgeInsets.all(25),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -240,6 +249,8 @@ class SaveResponseState extends State<SaveAnswer> {
           Positioned(
             top: height * 0.8,
             child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffb3b3b3)),
                 onPressed: () {
                   // print(
                   //     "${Provider.of<SaveProvider>(context, listen: false).savedMyAnswers.values.toList()}+sda");
@@ -250,7 +261,10 @@ class SaveResponseState extends State<SaveAnswer> {
                       .clear();
                 },
                 // print(saveAnswer.savedMyAnswers.values.toList());
-                child: const Text("Save Button")),
+                child: const Text(
+                  "Save Button",
+                  style: TextStyle(color: Colors.black),
+                )),
           ),
           Positioned(
             top: height * 0.04,
