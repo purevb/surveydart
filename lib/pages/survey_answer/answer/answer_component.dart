@@ -5,7 +5,6 @@ import 'package:survey/provider/save_provider.dart';
 
 class AnswerTile extends StatefulWidget {
   final String questionId;
-  // final String responseId;
   final String userId;
   final List<Answer> answer;
   final String typeId;
@@ -20,7 +19,6 @@ class AnswerTile extends StatefulWidget {
     required this.answer,
     required this.typeId,
     required this.questionId,
-    // required this.responseId,
     required this.userId,
     super.key,
   });
@@ -35,6 +33,7 @@ class AnswerTileState extends State<AnswerTile> {
   var saveAnswer = SaveProvider();
   late Map<int, int?> selectedAnswer;
   late String text = "";
+
   @override
   void initState() {
     super.initState();
@@ -107,7 +106,6 @@ class AnswerTileState extends State<AnswerTile> {
                         setState(() {
                           Provider.of<SaveProvider>(context, listen: false)
                               .saveAnswers(widget.questionId, [text]);
-                          // saveAnswer.saveAnswers(widget.questionId, [text]);
                         });
                       },
                     ),
@@ -128,7 +126,7 @@ class AnswerTileState extends State<AnswerTile> {
                             color: Color(0xffb3b3b3)),
                       ),
                       leading: Checkbox(
-                        value: isChecked[widget.index]?[index],
+                        value: isChecked[widget.index]?[index] ?? false,
                         onChanged: (bool? value) {
                           setState(() {
                             isChecked[widget.index]?[index] = value ?? false;
