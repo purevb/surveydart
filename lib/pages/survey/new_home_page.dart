@@ -592,7 +592,11 @@ class _HomePageState extends State<NewHomePage> {
                           ),
                         ),
                       ),
-
+                      Positioned(
+                        left: width * 0.375,
+                        top: height*0.01,
+                        child: const Text("Upoint Survey",style: TextStyle(color: Colors.white,fontSize: 20),)
+                      ),
                       Positioned(
                         top: height * 0.06,
                         left: 0,
