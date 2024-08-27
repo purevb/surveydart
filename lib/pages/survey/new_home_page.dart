@@ -6,12 +6,14 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:survey/models/survey_model.dart';
+import 'package:survey/models/user_model.dart';
 import 'package:survey/pages/survey/home_page.dart';
 import 'package:survey/provider/save_provider.dart';
 import 'package:survey/services/survey_service.dart';
 import 'package:survey/pages/survey_answer/question/test.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:survey/services/user_service.dart';
 
 class NewHomePage extends StatefulWidget {
   // String? token;
@@ -34,11 +36,14 @@ class _HomePageState extends State<NewHomePage> {
   late String email;
   String? name;
   List<Survey>? surveys;
+  List<User>? users;
   var isLoaded = false;
   late String surveyID;
   late DateTime beginDate;
   String responseId = '';
   var saveProvider = SaveProvider();
+  late User me;
+
   @override
   void initState() {
     super.initState();
@@ -47,12 +52,17 @@ class _HomePageState extends State<NewHomePage> {
     responseId = "";
     getSurveyData();
     _handleRefresh();
+    // checker();
   }
 
   Future<void> getSurveyData() async {
     try {
       surveys = await SurveyRemoteService().getSurvey();
-      if (surveys != null && surveys!.isNotEmpty) {
+      users = await UserRemoteService().getAllUsers();
+      if (users!.isNotEmpty &&
+          users != null &&
+          surveys != null &&
+          surveys!.isNotEmpty) {
         setState(() {
           isLoaded = true;
           // saveProvider.addSurvey(surveys!);
@@ -71,6 +81,11 @@ class _HomePageState extends State<NewHomePage> {
   }
 
   int currentIndex = 0;
+  // void checker() {
+  //   if (users!.isNotEmpty && users != null) {
+  //     me = users!.firstWhere((element) => element.id == widget.id);
+  //   }
+  // }
 
   Future<void> saveResponse() async {
     prefs = await SharedPreferences.getInstance();
@@ -498,6 +513,8 @@ class _HomePageState extends State<NewHomePage> {
                             shrinkWrap: true,
                             itemCount: surveys!.length,
                             itemBuilder: (context, index) {
+                              // if (me.participatedSurveys!.any((element) =>
+                              //     element.contains(surveys![index].id))) {
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -550,18 +567,21 @@ class _HomePageState extends State<NewHomePage> {
                                         ),
                                         Text(
                                           surveys![index].surveyName,
+                                          maxLines: 1,
                                           style: const TextStyle(
                                               color: Color(0xffb3b3b3)),
                                         ),
                                         Text(
                                           surveys![index].surveyDescription,
+                                          maxLines: 2,
                                           style: const TextStyle(
                                               color: Color(0xffb3b3b3)),
                                           textAlign: TextAlign.center,
-                                        )
+                                        ),
                                       ],
                                     )),
                               );
+                              // Ф// }
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
@@ -593,10 +613,12 @@ class _HomePageState extends State<NewHomePage> {
                         ),
                       ),
                       Positioned(
-                        left: width * 0.375,
-                        top: height*0.01,
-                        child: const Text("Upoint Survey",style: TextStyle(color: Colors.white,fontSize: 20),)
-                      ),
+                          left: width * 0.375,
+                          top: height * 0.01,
+                          child: const Text(
+                            "Upoint Survey",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          )),
                       Positioned(
                         top: height * 0.06,
                         left: 0,
