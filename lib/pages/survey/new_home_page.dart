@@ -125,7 +125,8 @@ class _HomePageState extends State<NewHomePage> {
       context: context,
       builder: (BuildContext context) {
         return const AlertDialog(
-          title: Text("You cannot participate again"),
+          backgroundColor: Color(0xff121212),
+          title: Text("You cannot participate again",style: TextStyle(color:Color(0xffb3b3b3)),),
         );
       },
     );

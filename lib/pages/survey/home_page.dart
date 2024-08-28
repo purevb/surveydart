@@ -5,11 +5,13 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:survey/models/survey_model.dart';
+import 'package:survey/models/user_model.dart';
 import 'package:survey/provider/save_provider.dart';
 import 'package:survey/services/survey_service.dart';
 import 'package:survey/pages/survey_answer/question/test.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:survey/services/user_service.dart';
 
 class HomePage extends StatefulWidget {
   // String? token;
@@ -37,6 +39,9 @@ class _HomePageState extends State<HomePage> {
   late DateTime beginDate;
   String responseId = '';
   var saveProvider = SaveProvider();
+  List<User>? users;
+  late User me;
+
   @override
   void initState() {
     super.initState();
@@ -50,9 +55,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> getSurveyData() async {
     try {
       surveys = await SurveyRemoteService().getSurvey();
-      if (surveys != null && surveys!.isNotEmpty) {
+      users = await UserRemoteService().getAllUsers();
+      if (users!.isNotEmpty && surveys!.isNotEmpty) {
         setState(() {
           isLoaded = true;
+          checker();
           // saveProvider.addSurvey(surveys!);
         });
       } else {
@@ -60,6 +67,13 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       print('Error loading surveys: $e');
+    }
+  }
+
+  void checker() {
+    if (users!.isNotEmpty && users != null) {
+      me = users!.firstWhere((element) => element.id == widget.id);
+      print(me.email);
     }
   }
 
@@ -128,7 +142,6 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
         ),
         bottomNavigationBar: BottomNavigationBar(
-          // unselectedIconCol: ,
           unselectedItemColor: const Color(0xffb3b3b3),
           onTap: (index) {
             setState(() {
@@ -153,40 +166,6 @@ class _HomePageState extends State<HomePage> {
                 label: 'Settings',
                 backgroundColor: Color(0xffb3b3b3)),
           ],
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // backgroundColor: const Color(0xff121212),
-          // tabBackgroundColor: const Color(0xffb3b3b3),
-          // padding: const EdgeInsets.all(15),
-          // tabMargin: const EdgeInsets.only(bottom: 4, right: 14, left: 14),
-          // selectedIndex: currentIndex,
-          // onTabChange: (index) {
-          //   setState(() {
-          //     currentIndex = index;
-          //   });
-          // },
-          // gap: 0,
-          // tabs: const [
-          //   GButton(
-          //     icon: Icons.home,
-          //     text: 'Home',
-          //     iconColor: Color(0xffb3b3b3),
-          //   ),
-          //   GButton(
-          //     icon: Icons.favorite,
-          //     text: 'Likes',
-          //     iconColor: Color(0xffb3b3b3),
-          //   ),
-          //   GButton(
-          //     icon: Icons.search_sharp,
-          //     text: 'Search',
-          //     iconColor: Color(0xffb3b3b3),
-          //   ),
-          //   GButton(
-          //     icon: Icons.settings,
-          //     text: 'Settings',
-          //     iconColor: Color(0xffb3b3b3),
-          //   ),
-          // ],
         ),
         body: isLoaded
             ? Stack(
@@ -195,49 +174,6 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     color: const Color(0xff121212),
                   ),
-                  // Container(
-                  //   decoration: const BoxDecoration(
-                  //     gradient: LinearGradient(
-                  //       begin: Alignment.topCenter,
-                  //       end: Alignment.bottomCenter,
-                  //       colors: [
-                  //         Color.fromARGB(255, 187, 178, 202),
-                  //         Color(0xffe7e2fe),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   decoration: const BoxDecoration(
-                  //     shape: BoxShape.rectangle,
-                  //     gradient: LinearGradient(
-                  //       begin: Alignment.topCenter,
-                  //       end: Alignment.bottomCenter,
-                  //       colors: [
-                  //         Color.fromARGB(255, 57, 16, 122),
-                  //         Color.fromARGB(255, 183, 170, 241),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   top: -80,
-                  //   child: Container(
-                  //     height: 200,
-                  //     width: 200,
-                  //     decoration: const BoxDecoration(
-                  //       shape: BoxShape.circle,
-                  //       gradient: LinearGradient(
-                  //         begin: Alignment.center,
-                  //         end: AlignmentDirectional.bottomCenter,
-                  //         colors: [
-                  //           Color.fromARGB(255, 57, 16, 122),
-                  //           Color.fromARGB(255, 218, 196, 243),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   Positioned(
                     top: height * 0.01,
                     child: SizedBox(
@@ -254,6 +190,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         itemCount: surveys!.length,
                         itemBuilder: (context, index) {
+                          // if (me.particatedSurveys!.any((surveyList) =>
+                          //     surveyList.contains(surveys![index].id))) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: GestureDetector(
