@@ -52,20 +52,17 @@ class _HomePageState extends State<NewHomePage> {
     responseId = "";
     getSurveyData();
     _handleRefresh();
-    // checker();
   }
 
   Future<void> getSurveyData() async {
     try {
       surveys = await SurveyRemoteService().getSurvey();
       users = await UserRemoteService().getAllUsers();
-      if (users!.isNotEmpty &&
-          users != null &&
-          surveys != null &&
-          surveys!.isNotEmpty) {
+      if (users!.isNotEmpty && surveys!.isNotEmpty) {
         setState(() {
           isLoaded = true;
           // saveProvider.addSurvey(surveys!);
+          checker();
         });
       } else {
         print('No surveys found.');
@@ -81,11 +78,12 @@ class _HomePageState extends State<NewHomePage> {
   }
 
   int currentIndex = 0;
-  // void checker() {
-  //   if (users!.isNotEmpty && users != null) {
-  //     me = users!.firstWhere((element) => element.id == widget.id);
-  //   }
-  // }
+  void checker() {
+    if (users!.isNotEmpty && users != null) {
+      me = users!.firstWhere((element) => element.id == widget.id);
+      print(me.email);
+    }
+  }
 
   Future<void> saveResponse() async {
     prefs = await SharedPreferences.getInstance();
@@ -120,6 +118,17 @@ class _HomePageState extends State<NewHomePage> {
     } catch (e) {
       print('Error saving response: $e');
     }
+  }
+
+  Future<void> _dialogAnswerBuilder(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          title: Text("You cannot participate again"),
+        );
+      },
+    );
   }
 
   @override
@@ -230,70 +239,145 @@ class _HomePageState extends State<NewHomePage> {
                             shrinkWrap: true,
                             itemCount: surveys!.length,
                             itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    surveyID = surveys![index].id;
-                                    beginDate = DateTime.now();
-                                  });
-                                  saveResponse();
-                                  Provider.of<SaveProvider>(context,
-                                          listen: false)
-                                      .surveyId = surveys![index].id;
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AnswerPage(
-                                        surveyId: surveys![index].id,
-                                        userId: widget.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.white.withOpacity(0.1),
-                                            offset: const Offset(0, 2),
-                                            blurRadius: 4.0,
-                                            spreadRadius: 1.0,
+                              if (me.particatedSurveys!.any((surveyList) =>
+                                  surveyList.contains(surveys![index].id))) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _dialogAnswerBuilder(context);
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.white.withOpacity(0.1),
+                                              offset: const Offset(0, 2),
+                                              blurRadius: 4.0,
+                                              spreadRadius: 1.0,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.2))),
+                                      width: width * 0.3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            surveys![index].imgUrl,
+                                            width: width * 0.2,
+                                            height: height * 0.1,
                                           ),
+                                          Container(
+                                            height: height * 0.02,
+                                            width: width * 0.2,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: const Text(
+                                              "Joined",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyName,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyDescription,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                            textAlign: TextAlign.center,
+                                          )
                                         ],
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(
-                                            color:
-                                                Colors.white.withOpacity(0.2))),
-                                    width: width * 0.3,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Image.network(
-                                          surveys![index].imgUrl,
-                                          width: width * 0.2,
-                                          height: height * 0.1,
+                                      )),
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      surveyID = surveys![index].id;
+                                      beginDate = DateTime.now();
+                                    });
+                                    saveResponse();
+                                    Provider.of<SaveProvider>(context,
+                                            listen: false)
+                                        .surveyId = surveys![index].id;
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AnswerPage(
+                                          surveyId: surveys![index].id,
+                                          userId: widget.id,
                                         ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          surveys![index].surveyName,
-                                          style: const TextStyle(
-                                              color: Color(0xffb3b3b3)),
-                                        ),
-                                        Text(
-                                          surveys![index].surveyDescription,
-                                          style: const TextStyle(
-                                              color: Color(0xffb3b3b3)),
-                                          textAlign: TextAlign.center,
-                                        )
-                                      ],
-                                    )),
-                              );
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.white.withOpacity(0.1),
+                                              offset: const Offset(0, 2),
+                                              blurRadius: 4.0,
+                                              spreadRadius: 1.0,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.2))),
+                                      width: width * 0.3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            surveys![index].imgUrl,
+                                            width: width * 0.2,
+                                            height: height * 0.1,
+                                          ),
+                                          Container(
+                                            height: height * 0.02,
+                                            width: width * 0.2,
+                                            decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: const Text(
+                                              "New",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyName,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyDescription,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                            textAlign: TextAlign.center,
+                                          )
+                                        ],
+                                      )),
+                                );
+                              }
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
@@ -371,71 +455,145 @@ class _HomePageState extends State<NewHomePage> {
                               shrinkWrap: true,
                               itemCount: surveys!.length,
                               itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      surveyID = surveys![index].id;
-                                      beginDate = DateTime.now();
-                                    });
-                                    saveResponse();
-                                    Provider.of<SaveProvider>(context,
-                                            listen: false)
-                                        .surveyId = surveys![index].id;
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AnswerPage(
-                                          surveyId: surveys![index].id,
-                                          userId: widget.id,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.white.withOpacity(0.1),
-                                              offset: const Offset(0, 2),
-                                              blurRadius: 4.0,
-                                              spreadRadius: 1.0,
+                                if (me.particatedSurveys!.any((surveyList) =>
+                                    surveyList.contains(surveys![index].id))) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      _dialogAnswerBuilder(context);
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.white
+                                                    .withOpacity(0.1),
+                                                offset: const Offset(0, 2),
+                                                blurRadius: 4.0,
+                                                spreadRadius: 1.0,
+                                              ),
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.2))),
+                                        width: width * 0.3,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Image.network(
+                                              surveys![index].imgUrl,
+                                              width: width * 0.2,
+                                              height: height * 0.1,
                                             ),
+                                            Container(
+                                              height: height * 0.02,
+                                              width: width * 0.2,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.red,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child: const Text(
+                                                "Joined",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            Text(
+                                              surveys![index].surveyName,
+                                              style: const TextStyle(
+                                                  color: Color(0xffb3b3b3)),
+                                            ),
+                                            Text(
+                                              surveys![index].surveyDescription,
+                                              style: const TextStyle(
+                                                  color: Color(0xffb3b3b3)),
+                                              textAlign: TextAlign.center,
+                                            )
                                           ],
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          border: Border.all(
-                                              color: Colors.white
-                                                  .withOpacity(0.2))),
-                                      width: width * 0.3,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Image.network(
-                                            surveys![index].imgUrl,
-                                            width: width * 0.2,
-                                            height: height * 0.1,
+                                        )),
+                                  );
+                                } else {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        surveyID = surveys![index].id;
+                                        beginDate = DateTime.now();
+                                      });
+                                      saveResponse();
+                                      Provider.of<SaveProvider>(context,
+                                              listen: false)
+                                          .surveyId = surveys![index].id;
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AnswerPage(
+                                            surveyId: surveys![index].id,
+                                            userId: widget.id,
                                           ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            surveys![index].surveyName,
-                                            style: const TextStyle(
-                                                color: Color(0xffb3b3b3)),
-                                          ),
-                                          Text(
-                                            surveys![index].surveyDescription,
-                                            style: const TextStyle(
-                                                color: Color(0xffb3b3b3)),
-                                            textAlign: TextAlign.center,
-                                          )
-                                        ],
-                                      )),
-                                );
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.white
+                                                    .withOpacity(0.1),
+                                                offset: const Offset(0, 2),
+                                                blurRadius: 4.0,
+                                                spreadRadius: 1.0,
+                                              ),
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.2))),
+                                        width: width * 0.3,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Image.network(
+                                              surveys![index].imgUrl,
+                                              width: width * 0.2,
+                                              height: height * 0.1,
+                                            ),
+                                            Container(
+                                              height: height * 0.02,
+                                              width: width * 0.2,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.green,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child: const Text(
+                                                "New",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            Text(
+                                              surveys![index].surveyName,
+                                              style: const TextStyle(
+                                                  color: Color(0xffb3b3b3)),
+                                            ),
+                                            Text(
+                                              surveys![index].surveyDescription,
+                                              style: const TextStyle(
+                                                  color: Color(0xffb3b3b3)),
+                                              textAlign: TextAlign.center,
+                                            )
+                                          ],
+                                        )),
+                                  );
+                                }
                               },
                               separatorBuilder:
                                   (BuildContext context, int index) {
@@ -513,75 +671,145 @@ class _HomePageState extends State<NewHomePage> {
                             shrinkWrap: true,
                             itemCount: surveys!.length,
                             itemBuilder: (context, index) {
-                              // if (me.participatedSurveys!.any((element) =>
-                              //     element.contains(surveys![index].id))) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    surveyID = surveys![index].id;
-                                    beginDate = DateTime.now();
-                                  });
-                                  saveResponse();
-                                  Provider.of<SaveProvider>(context,
-                                          listen: false)
-                                      .surveyId = surveys![index].id;
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AnswerPage(
-                                        surveyId: surveys![index].id,
-                                        userId: widget.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.white.withOpacity(0.1),
-                                            offset: const Offset(0, 2),
-                                            blurRadius: 4.0,
-                                            spreadRadius: 1.0,
+                              if (me.particatedSurveys!.any((surveyList) =>
+                                  surveyList.contains(surveys![index].id))) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _dialogAnswerBuilder(context);
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.white.withOpacity(0.1),
+                                              offset: const Offset(0, 2),
+                                              blurRadius: 4.0,
+                                              spreadRadius: 1.0,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.2))),
+                                      width: width * 0.3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            surveys![index].imgUrl,
+                                            width: width * 0.2,
+                                            height: height * 0.1,
                                           ),
+                                          Container(
+                                            height: height * 0.02,
+                                            width: width * 0.2,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: const Text(
+                                              "Joined",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyName,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyDescription,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                            textAlign: TextAlign.center,
+                                          )
                                         ],
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(
-                                            color:
-                                                Colors.white.withOpacity(0.2))),
-                                    width: width * 0.3,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Image.network(
-                                          surveys![index].imgUrl,
-                                          width: width * 0.2,
-                                          height: height * 0.1,
+                                      )),
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      surveyID = surveys![index].id;
+                                      beginDate = DateTime.now();
+                                    });
+                                    saveResponse();
+                                    Provider.of<SaveProvider>(context,
+                                            listen: false)
+                                        .surveyId = surveys![index].id;
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AnswerPage(
+                                          surveyId: surveys![index].id,
+                                          userId: widget.id,
                                         ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          surveys![index].surveyName,
-                                          maxLines: 1,
-                                          style: const TextStyle(
-                                              color: Color(0xffb3b3b3)),
-                                        ),
-                                        Text(
-                                          surveys![index].surveyDescription,
-                                          maxLines: 2,
-                                          style: const TextStyle(
-                                              color: Color(0xffb3b3b3)),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    )),
-                              );
-                              // Ф// }
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.white.withOpacity(0.1),
+                                              offset: const Offset(0, 2),
+                                              blurRadius: 4.0,
+                                              spreadRadius: 1.0,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.2))),
+                                      width: width * 0.3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            surveys![index].imgUrl,
+                                            width: width * 0.2,
+                                            height: height * 0.1,
+                                          ),
+                                          Container(
+                                            height: height * 0.02,
+                                            width: width * 0.2,
+                                            decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: const Text(
+                                              "New",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyName,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                          ),
+                                          Text(
+                                            surveys![index].surveyDescription,
+                                            style: const TextStyle(
+                                                color: Color(0xffb3b3b3)),
+                                            textAlign: TextAlign.center,
+                                          )
+                                        ],
+                                      )),
+                                );
+                              }
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
@@ -641,33 +869,47 @@ class _HomePageState extends State<NewHomePage> {
                           ),
                           child: Swiper(
                             itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    surveyID = surveys![index].id;
-                                    beginDate = DateTime.now();
-                                  });
-                                  saveResponse();
-                                  Provider.of<SaveProvider>(context,
-                                          listen: false)
-                                      .surveyId = surveys![index].id;
+                              if (me.particatedSurveys!.any((surveyList) =>
+                                  surveyList.contains(surveys![index].id))) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _dialogAnswerBuilder(context);
+                                  },
+                                  child: Image.network(
+                                    surveys![index].imgUrl,
+                                    width: 50,
+                                    height: 100,
+                                  ),
+                                );
+                              } else {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      surveyID = surveys![index].id;
+                                      beginDate = DateTime.now();
+                                    });
+                                    saveResponse();
+                                    Provider.of<SaveProvider>(context,
+                                            listen: false)
+                                        .surveyId = surveys![index].id;
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AnswerPage(
-                                        surveyId: surveys![index].id,
-                                        userId: widget.id,
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AnswerPage(
+                                          surveyId: surveys![index].id,
+                                          userId: widget.id,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: Image.network(
-                                  surveys![index].imgUrl,
-                                  width: 50,
-                                  height: 100,
-                                ),
-                              );
+                                    );
+                                  },
+                                  child: Image.network(
+                                    surveys![index].imgUrl,
+                                    width: 50,
+                                    height: 100,
+                                  ),
+                                );
+                              }
                             },
                             itemCount: surveys!.length,
                             viewportFraction: 0.8,

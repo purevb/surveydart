@@ -90,175 +90,186 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: height * 0.1,
-                      // child: RiveAnimation.asset("assets/anime.riv"),
-                    ),
-                    const Icon(
-                      Icons.lock,
-                      size: 100,
-                      color: Color(0xffb3b3b3),
-                    ),
-                    const SizedBox(height: 50),
-                    const Text(
-                      'Welcome back you\'ve been missed!',
-                      style: TextStyle(color: Color(0xffb3b3b3), fontSize: 16),
-                    ),
-                    const SizedBox(height: 25),
-                    TextFormField(
-                      controller: emailController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade400)),
-                        fillColor: Colors.grey.shade200,
-                        filled: true,
-                        hintText: 'Username or Password',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Buglu ';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    TextFormField(
-                      controller: passWordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade400)),
-                        fillColor: Colors.grey.shade200,
-                        filled: true,
-                        hintText: 'Password',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Buglu ';
-                        }
-                        return null;
-                      },
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Forgot password',
-                            style: TextStyle(color: Color(0xffb3b3b3)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: signUserIn,
-                      child: Container(
-                        padding: const EdgeInsets.all(25),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff1db954),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Sign in",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.5,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              'Or continue with',
-                              style: TextStyle(color: Color(0xffb3b3b3)),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.5,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 35),
-                    const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SquareTile(
-                          imagePath:
-                              'https://imgs.search.brave.com/WNmYnN33P-81WgMcwlDKQXxypuypMVEcihrqyg27o_s/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy81/ODQ3ZjljYmNlZjEw/MTRjMGI1ZTQ4Yzgu/cG5n',
-                        ),
-                        SquareTile(
-                          imagePath:
-                              'https://cdn-icons-png.flaticon.com/128/0/747.png',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 50),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'Not a member?',
-                          style: TextStyle(color: Color(0xffb3b3b3)),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterPage()));
-                          },
-                          child: const Text(
-                            'Register Now!',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  children: forgotPassword(height, context),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> forgotPassword(double height, BuildContext context) {
+    return [
+      SizedBox(
+        height: height * 0.1,
+      ),
+      const Icon(
+        Icons.lock,
+        size: 100,
+        color: Color(0xffb3b3b3),
+      ),
+      const SizedBox(height: 50),
+      const Text(
+        'Welcome back you\'ve been missed!',
+        style: TextStyle(color: Color(0xffb3b3b3), fontSize: 16),
+      ),
+      const SizedBox(height: 25),
+      email(),
+      const SizedBox(height: 25),
+      passWord(),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Forgot password',
+              style: TextStyle(color: Color(0xffb3b3b3)),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 20),
+      GestureDetector(
+        onTap: signUserIn,
+        child: Container(
+          padding: const EdgeInsets.all(25),
+          decoration: BoxDecoration(
+            color: const Color(0xff1db954),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Center(
+            child: Text(
+              "Sign in",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 40),
+      divider(),
+      const SizedBox(height: 35),
+      const Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // SquareTile(
+          //   imagePath: '',
+          // ),
+          // SquareTile(
+          //   imagePath: '',
+          // ),
+        ],
+      ),
+      const SizedBox(height: 50),
+      register(context),
+    ];
+  }
+
+  Row register(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Not a member?',
+          style: TextStyle(color: Color(0xffb3b3b3)),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const RegisterPage()));
+          },
+          child: const Text(
+            'Register Now!',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding divider() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(
+              thickness: 0.5,
+              color: Colors.grey[400],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Or continue with',
+              style: TextStyle(color: Color(0xffb3b3b3)),
+            ),
+          ),
+          Expanded(
+            child: Divider(
+              thickness: 0.5,
+              color: Colors.grey[400],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  TextFormField passWord() {
+    return TextFormField(
+      controller: passWordController,
+      obscureText: true,
+      decoration: InputDecoration(
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade400)),
+        fillColor: Colors.grey.shade200,
+        filled: true,
+        hintText: 'Password',
+        hintStyle: TextStyle(color: Colors.grey[500]),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Buglu ';
+        }
+        return null;
+      },
+    );
+  }
+
+  TextFormField email() {
+    return TextFormField(
+      controller: emailController,
+      obscureText: false,
+      decoration: InputDecoration(
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade400)),
+        fillColor: Colors.grey.shade200,
+        filled: true,
+        hintText: 'Username or Password',
+        hintStyle: TextStyle(color: Colors.grey[500]),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Buglu ';
+        }
+        return null;
+      },
     );
   }
 }
