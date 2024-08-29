@@ -91,7 +91,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         totalSteps: widget.allIndex!,
                         currentStep: widget.index! + 1,
                         size: 8,
-                        padding: 0.001,
+                        padding: 0.0001,
                         selectedColor: Colors.yellow,
                         unselectedColor: Colors.cyan,
                         roundedEdges: const Radius.circular(10),
@@ -119,6 +119,7 @@ class _QuestionComponentState extends State<QuestionComponent> {
                         height: height * 0.35,
                         child: AnswerTile(
                           key: answerTileKey,
+                          allIndex: widget.allIndex!,
                           index: widget.index!,
                           onBack: usedOnBack,
                           onNext: usedOnNext,

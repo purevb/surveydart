@@ -11,6 +11,7 @@ class AnswerTile extends StatefulWidget {
   final bool? onNext;
   final bool? onBack;
   final int index;
+  final int allIndex;
 
   const AnswerTile({
     required this.index,
@@ -20,6 +21,7 @@ class AnswerTile extends StatefulWidget {
     required this.typeId,
     required this.questionId,
     required this.userId,
+    required this.allIndex,
     super.key,
   });
 
@@ -30,7 +32,6 @@ class AnswerTile extends StatefulWidget {
 class AnswerTileState extends State<AnswerTile> {
   final textFieldController = TextEditingController();
   late Map<int, Map<int, bool>> isChecked;
-  var saveAnswer = SaveProvider();
   late Map<int, int?> selectedAnswer;
   late String text = "";
 
@@ -39,7 +40,7 @@ class AnswerTileState extends State<AnswerTile> {
     super.initState();
     selectedAnswer = {};
     isChecked = {
-      for (int i = 0; i < widget.answer.length; i++)
+      for (int i = 0; i < widget.allIndex; i++)
         i: {for (int j = 0; j < widget.answer.length; j++) j: false}
     };
     text = "";
@@ -54,7 +55,7 @@ class AnswerTileState extends State<AnswerTile> {
     } else if (widget.typeId.contains("669763b497492aac645169c1")) {
       List<String> selectedAnswers = [];
       for (int i = 0; i < widget.answer.length; i++) {
-        if (isChecked[widget.index]![i] == true) {
+        if (isChecked[widget.index]?[i] == true) {
           selectedAnswers.add(widget.answer[i].id);
         }
       }
@@ -89,14 +90,13 @@ class AnswerTileState extends State<AnswerTile> {
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     child: TextField(
                       controller: textFieldController,
-                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
-                          hintMaxLines: 5,
-                          helperMaxLines: 5,
-                          contentPadding: EdgeInsets.symmetric(vertical: 80),
-                          border: OutlineInputBorder(),
-                          labelText: 'Your Opinion',
-                          labelStyle: TextStyle(color: Color(0xffb3b3b3))),
+                        hintMaxLines: 5,
+                        helperMaxLines: 5,
+                        contentPadding: EdgeInsets.symmetric(vertical: 80),
+                        border: OutlineInputBorder(),
+                        labelText: 'Your Opinion',
+                      ),
                       onChanged: (value) {
                         setState(() {
                           text = value;
@@ -121,24 +121,24 @@ class AnswerTileState extends State<AnswerTile> {
                       title: Text(
                         widget.answer[index].answerText,
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Roboto',
-                            color: Color(0xffb3b3b3)),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Roboto',
+                        ),
                       ),
                       leading: Checkbox(
                         value: isChecked[widget.index]?[index] ?? false,
                         onChanged: (bool? value) {
                           setState(() {
                             isChecked[widget.index]?[index] = value ?? false;
-                            List<String> selectedAnswers = [];
-                            for (int i = 0; i < isChecked.length; i++) {
-                              if (isChecked[i]?[index] == true) {
-                                selectedAnswers.add(widget.answer[i].id);
-                              }
-                            }
-                            saveAnswer.saveAnswers(
-                                widget.questionId, selectedAnswers);
                           });
+                          List<String> selectedAnswers = [];
+                          for (int i = 0; i < widget.answer.length; i++) {
+                            if (isChecked[widget.index]?[i] == true) {
+                              selectedAnswers.add(widget.answer[i].id);
+                            }
+                          }
+                          Provider.of<SaveProvider>(context, listen: false)
+                              .saveAnswers(widget.questionId, selectedAnswers);
                         },
                       ),
                     ),
@@ -151,24 +151,25 @@ class AnswerTileState extends State<AnswerTile> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: RadioListTile<int>(
-                      tileColor: Colors.white,
                       title: Text(
                         widget.answer[index].answerText,
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Roboto',
-                            color: Color(0xffb3b3b3)),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Roboto',
+                        ),
                       ),
                       value: index,
                       groupValue: selectedAnswer[widget.index],
                       onChanged: (int? value) {
                         setState(() {
                           selectedAnswer[widget.index] = value;
-                          if (value != null) {
-                            saveAnswer.saveAnswers(
-                                widget.questionId, [widget.answer[value].id]);
-                          }
                         });
+
+                        if (value != null) {
+                          Provider.of<SaveProvider>(context, listen: false)
+                              .saveAnswers(
+                                  widget.questionId, [widget.answer[value].id]);
+                        }
                       },
                     ),
                   );
