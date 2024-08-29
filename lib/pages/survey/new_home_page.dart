@@ -16,13 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey/services/user_service.dart';
 
 class NewHomePage extends StatefulWidget {
-  // String? token;
   final String id;
-  const NewHomePage(
-      {
-      // this.token,
-      required this.id,
-      super.key});
+  const NewHomePage({required this.id, super.key});
 
   @override
   State<NewHomePage> createState() => _HomePageState();
@@ -43,12 +38,9 @@ class _HomePageState extends State<NewHomePage> {
   String responseId = '';
   var saveProvider = SaveProvider();
   late User me;
-
   @override
   void initState() {
     super.initState();
-    // Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
-    // email = jwtDecodedToken['email'];
     responseId = "";
     getSurveyData();
     _handleRefresh();
@@ -61,7 +53,6 @@ class _HomePageState extends State<NewHomePage> {
       if (users!.isNotEmpty && surveys!.isNotEmpty) {
         setState(() {
           isLoaded = true;
-          // saveProvider.addSurvey(surveys!);
           checker();
         });
       } else {
@@ -81,7 +72,7 @@ class _HomePageState extends State<NewHomePage> {
   void checker() {
     if (users!.isNotEmpty && users != null) {
       me = users!.firstWhere((element) => element.id == widget.id);
-      print(me.email);
+      // print(me.email);
     }
   }
 
@@ -126,10 +117,18 @@ class _HomePageState extends State<NewHomePage> {
       builder: (BuildContext context) {
         return const AlertDialog(
           backgroundColor: Color(0xff121212),
-          title: Text("You cannot participate again",style: TextStyle(color:Color(0xffb3b3b3)),),
+          title: Text(
+            "You cannot participate again",
+            style: TextStyle(color: Color(0xffb3b3b3)),
+          ),
         );
       },
     );
+  }
+
+  List<User> shuffle(List<User> users) {
+    users.shuffle();
+    return users;
   }
 
   @override
@@ -213,8 +212,8 @@ class _HomePageState extends State<NewHomePage> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomePage(id: widget.id)));
+                                                builder: (context) => HomePage(
+                                                    user: me, id: widget.id)));
                                       },
                                       child: const Text(
                                         "All ->",
@@ -281,7 +280,7 @@ class _HomePageState extends State<NewHomePage> {
                                                 borderRadius:
                                                     BorderRadius.circular(8)),
                                             child: const Text(
-                                              "Joined",
+                                              "Participated",
                                               style: TextStyle(
                                                   color: Colors.white),
                                               textAlign: TextAlign.center,
@@ -426,6 +425,7 @@ class _HomePageState extends State<NewHomePage> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           HomePage(
+                                                              user: me,
                                                               id: widget.id)));
                                             },
                                             child: const Text(
@@ -497,7 +497,7 @@ class _HomePageState extends State<NewHomePage> {
                                                   borderRadius:
                                                       BorderRadius.circular(8)),
                                               child: const Text(
-                                                "Joined",
+                                                "Participated",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                                 textAlign: TextAlign.center,
@@ -622,9 +622,9 @@ class _HomePageState extends State<NewHomePage> {
                                           Lottie.asset(
                                             width: 60,
                                             height: 60,
-                                            "assets/bonus2.json",
+                                            "assets/lorem.json",
                                           ),
-                                          const Text("Earn money",
+                                          const Text("Lorem",
                                               style: TextStyle(
                                                   color: Color(0xffb3b3b3))),
                                         ],
@@ -643,6 +643,7 @@ class _HomePageState extends State<NewHomePage> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           HomePage(
+                                                              user: me,
                                                               id: widget.id)));
                                             },
                                             child: const Text(
@@ -713,7 +714,7 @@ class _HomePageState extends State<NewHomePage> {
                                                 borderRadius:
                                                     BorderRadius.circular(8)),
                                             child: const Text(
-                                              "Joined",
+                                              "Participated",
                                               style: TextStyle(
                                                   color: Colors.white),
                                               textAlign: TextAlign.center,

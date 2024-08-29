@@ -57,6 +57,39 @@ class SaveResponseState extends State<SaveAnswer> {
     saveAllResponses(savedOptions);
   }
 
+  Future<void> addIdToUser() async {
+    try {
+      var ids = {
+        "surveyId": Provider.of<SaveProvider>(context, listen: false).surveyId
+      };
+      // print('${widget.userId}');
+      var userid = widget.userId;
+      var response = await http.post(
+        Uri.parse('http://10.0.2.2:3106/api/user/$userid'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(ids),
+      );
+
+      if (response.statusCode == 200) {
+        // print(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Answers saved and endDate updated successfully'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      print('Exception caught: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred')),
+      );
+    }
+  }
+
   Future<void> saveAllResponses(List<AnswerOptionModel> answers) async {
     final url = Uri.parse('http://10.0.2.2:3106/api/aoptionses');
     try {
@@ -67,7 +100,7 @@ class SaveResponseState extends State<SaveAnswer> {
         body: json.encode({'aoption': answersJson}),
       );
 
-      print('Post response: ${response.body}');
+      // print('Post response: ${response.body}');
 
       if (response.statusCode == 200) {
         Navigator.push(
@@ -90,11 +123,7 @@ class SaveResponseState extends State<SaveAnswer> {
         );
         if (updateResponse.statusCode == 200) {
           print('EndDate updated successfully.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content:
-                    Text('Answers saved and endDate updated successfully')),
-          );
+          addIdToUser();
         } else {
           print('Failed to update EndDate: ${updateResponse.statusCode}');
           ScaffoldMessenger.of(context).showSnackBar(

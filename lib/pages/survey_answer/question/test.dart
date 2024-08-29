@@ -48,11 +48,8 @@ class _AnswerPageState extends State<AnswerPage> {
       allSurvey = await AllSurveyRemoteService().getAllSurvey();
       questions = await QuestionRemoteService().getQuestion();
 
-      if (surveys != null &&
-          allSurvey != null &&
-          surveys!.isNotEmpty &&
+      if (surveys!.isNotEmpty &&
           allSurvey!.isNotEmpty &&
-          questions != null &&
           questions!.isNotEmpty) {
         setState(() {
           isLoaded = true;
