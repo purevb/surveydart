@@ -258,9 +258,10 @@ class SaveResponseState extends State<SaveAnswer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              Provider.of<SaveProvider>(context, listen: false)
-                                  .responseId,
-                              // widget.mySurveysQuestion![index].questionText,
+                              maxLines: 4,
+                              // Provider.of<SaveProvider>(context, listen: false)
+                              //     .responseId,
+                              widget.mySurveysQuestion![index].questionText,
                               style: const TextStyle(fontSize: 18),
                               textAlign: TextAlign.center,
                             ),
